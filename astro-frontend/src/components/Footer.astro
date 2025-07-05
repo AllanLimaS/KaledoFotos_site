@@ -1,0 +1,40 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-gray-900 text-white py-8">
+  <div
+    class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-6"
+  >
+    <!-- Logo ou nome do site -->
+    <div class="text-xl font-semibold">Kaledo Fotos</div>
+
+    <!-- Links sociais -->
+    <div class="flex space-x-6 text-gray-400">
+      <a
+        href="https://github.com/AllanLimaS"
+        class="hover:text-white"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+          <path
+            d="M12 .5C5.5.5.5 5.5.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.2-1.2-1.5-1.2-1.5-1-.7.1-.7.1-.7 1.1.1 1.7 1.1 1.7 1.1.9 1.7 2.4 1.2 3 .9.1-.6.3-1.2.6-1.5-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.4 1.2-3.3-.1-.3-.5-1.6.1-3.3 0 0 1-.3 3.4 1.3.9-.3 1.9-.5 2.9-.5s2 .2 2.9.5c2.4-1.6 3.4-1.3 3.4-1.3.6 1.7.2 3 .1 3.3.8.9 1.2 2 1.2 3.3 0 4.5-2.7 5.5-5.3 5.8.3.3.6.8.6 1.6v2.4c0 .3.2.7.8.6C20.7 21.4 24 17.1 24 12c0-6.5-5-11.5-12-11.5z"
+          ></path>
+        </svg>
+      </a>
+      <a href="mailto:sarah@kaledofotos.com" class="hover:text-white">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+          <path
+            d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 2v.01L12 13 4 6.01V6h16zM4 18V8.2l8 6 8-6V18H4z"
+          ></path>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Direitos autorais -->
+    <div class="text-sm text-gray-400">
+      © {year} Kaledo Fotos. Todos os direitos reservados.
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,74 @@
+---
+const links = [
+  { href: "/", label: "Início" },
+  { href: "/ensaios", label: "Ensaios" },
+  { href: "/gatos", label: "Gatos" },
+  { href: "/about", label: "Contato" },
+];
+---
+
+<nav
+  class="bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-700"
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16 items-center">
+      <!-- Logo -->
+      <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">
+        Kaledo Fotos
+      </a>
+
+      <!-- Botão Mobile -->
+      <button
+        id="menu-toggle"
+        class="md:hidden inline-flex items-center p-2 text-gray-500 rounded-lg hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+        aria-controls="mobile-menu"
+        aria-expanded="false"
+        onclick={() => {
+          const menu = document.getElementById("mobile-menu");
+          menu?.classList.toggle("hidden");
+        }}>
+      >
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+
+      <!-- Links Desktop -->
+      <div class="hidden md:flex space-x-6">
+        {
+          links.map((link) => (
+            <a
+              href={link.href}
+              class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-white"
+            >
+              {link.label}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Links Mobile -->
+  <div id="mobile-menu" class="md:hidden hidden px-4 pb-4">
+    {
+      links.map((link) => (
+        <a
+          href={link.href}
+          class="block py-2 text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-white"
+        >
+          {link.label}
+        </a>
+      ))
+    }
+  </div>
+</nav>

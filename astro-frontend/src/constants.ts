@@ -1,0 +1,1 @@
+export const variavel_constante_teste = "valor_constante_teste";

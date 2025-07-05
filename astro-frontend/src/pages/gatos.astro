@@ -1,0 +1,30 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const Titulo = "Gatos Page";
+const Descricao = "Esta é a página de gatos";
+
+const Fotos = [
+  {
+    nome: "gato",
+    url: "http://localhost:1337/uploads/Captura_de_tela_2024_12_09_123350_8f73686c44.png",
+  },
+  {
+    nome: "gato",
+    url: "http://localhost:1337/uploads/Captura_de_tela_2024_12_09_123350_8f73686c44.png",
+  },
+  {
+    nome: "gato",
+    url: "http://localhost:1337/uploads/Captura_de_tela_2024_12_09_123350_8f73686c44.png",
+  },
+];
+---
+
+<Layout>
+  <h1>gatos PAGE</h1>
+  {
+    Fotos.map((foto) => (
+      <img src={foto.url} alt={foto.nome} class="rounded shadow max-w-md" />
+    ))
+  }
+</Layout>

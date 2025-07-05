@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "ensaios",
+  "info": {
+    "singularName": "ensaio",
+    "pluralName": "ensaios",
+    "displayName": "Ensaio"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Titulo": {
+      "type": "string"
+    },
+    "Descricao": {
+      "type": "text"
+    },
+    "Fotos": {
+      "type": "component",
+      "component": "shared.teste",
+      "repeatable": true
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_shared_testes",
+  "info": {
+    "displayName": "Fotografia",
+    "icon": "information"
+  },
+  "options": {},
+  "attributes": {
+    "Foto": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "Titulo_da_foto": {
+      "type": "string"
+    },
+    "Informacoes_complementares": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}
