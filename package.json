@@ -1,0 +1,6 @@
+{
+    "scripts": {
+        "dev": "concurrently \"cd astro-frontend && npm run dev\" \"cd strapi-backend && npm run develop\"",
+        "build": "cd astro-frontend && npm run build"
+    }
+}

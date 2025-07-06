@@ -12,15 +12,25 @@
   "pluginOptions": {},
   "attributes": {
     "Titulo": {
-      "type": "string"
+      "type": "string",
+      "default": "Ensaio ####",
+      "required": true
     },
     "Descricao": {
       "type": "text"
     },
+    "link_da_pagina": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "regex": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
     "Fotos": {
       "type": "component",
       "component": "shared.teste",
-      "repeatable": true
+      "repeatable": true,
+      "required": true,
+      "min": 1
     }
   }
 }

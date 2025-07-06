@@ -1,0 +1,45 @@
+---
+// Imports
+import type { APIContext } from "astro";
+import fetchApi from "../../lib/strapi";
+import type { Ensaio } from "../../interfaces/ensaio";
+
+import Layout from "../../layouts/Layout.astro";
+
+// Gerador de rotas estáticas
+export async function getStaticPaths() {
+  const ensaios = await fetchApi<Ensaio[]>({
+    endpoint: "ensaios",
+    query: { "populate[Fotos][populate]": "Foto" },
+    wrappedByKey: "data",
+  });
+
+  return ensaios.map((ensaio) => ({
+    params: { slug: ensaio.link_da_pagina }, // ou pode usar o titulo slugificado
+    props: { ensaio },
+  }));
+}
+
+// Props recebidas da rota estática
+const { ensaio } = Astro.props;
+---
+
+<Layout>
+  <h1>{ensaio.Titulo}</h1>
+  <p>{ensaio.Descricao}</p>
+
+  <div>
+    {
+      ensaio.Fotos.map((foto) => (
+        <div>
+          <img
+            src={`http://localhost:1337${foto.Foto.url}`}
+            alt={foto.Foto.alternativeText || "Imagem"}
+            width="400"
+          />
+          <p>{foto.Titulo_da_foto}</p>
+        </div>
+      ))
+    }
+  </div>
+</Layout>

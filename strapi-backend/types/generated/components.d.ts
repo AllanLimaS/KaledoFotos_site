@@ -69,9 +69,10 @@ export interface SharedTeste extends Struct.ComponentSchema {
     icon: 'information';
   };
   attributes: {
-    Foto: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    Foto: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'> &
+      Schema.Attribute.Required;
     Informacoes_complementares: Schema.Attribute.Text;
-    Titulo_da_foto: Schema.Attribute.String;
+    Titulo_da_foto: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
 
