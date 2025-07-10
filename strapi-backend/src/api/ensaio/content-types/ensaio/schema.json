@@ -25,6 +25,15 @@
       "unique": true,
       "regex": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
     },
+    "Foto_capa": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images",
+        "files"
+      ]
+    },
     "Fotos": {
       "type": "component",
       "component": "shared.teste",

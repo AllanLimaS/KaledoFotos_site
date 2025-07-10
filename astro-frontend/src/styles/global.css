@@ -1,1 +1,22 @@
 @import "tailwindcss";
+
+@theme {
+    --color-bordo: #590319;
+    --color-bege-claro: #E1C38F;
+    --color-bege-escuro: #91764E;
+    --color-verde: #5A5D4C;
+    --color-preto: #2C2C2C;
+
+  }
+
+.font-primary {
+  font-family: "Aboreto", sans-serif;
+}
+
+.font-secondary {
+  font-family: "Poppins", sans-serif;
+}
+
+html {
+    scroll-behavior: smooth; }
+

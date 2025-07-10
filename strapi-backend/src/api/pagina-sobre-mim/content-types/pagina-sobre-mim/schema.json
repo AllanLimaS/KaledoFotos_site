@@ -1,0 +1,28 @@
+{
+  "kind": "singleType",
+  "collectionName": "pagina_sobre_mims",
+  "info": {
+    "singularName": "pagina-sobre-mim",
+    "pluralName": "pagina-sobre-mims",
+    "displayName": "Pagina sobre mim"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Foto": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images",
+        "files"
+      ]
+    },
+    "Texto": {
+      "type": "text",
+      "required": true
+    }
+  }
+}

@@ -62,6 +62,19 @@ export interface SharedSlider extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedSocial extends Struct.ComponentSchema {
+  collectionName: 'components_shared_socials';
+  info: {
+    displayName: 'Social';
+    icon: 'user';
+  };
+  attributes: {
+    Icon_svg: Schema.Attribute.Text & Schema.Attribute.Required;
+    Nome: Schema.Attribute.String & Schema.Attribute.Required;
+    URL: Schema.Attribute.Text & Schema.Attribute.Required;
+  };
+}
+
 export interface SharedTeste extends Struct.ComponentSchema {
   collectionName: 'components_shared_testes';
   info: {
@@ -84,6 +97,7 @@ declare module '@strapi/strapi' {
       'shared.rich-text': SharedRichText;
       'shared.seo': SharedSeo;
       'shared.slider': SharedSlider;
+      'shared.social': SharedSocial;
       'shared.teste': SharedTeste;
     }
   }

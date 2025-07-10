@@ -1,35 +1,26 @@
 ---
 const links = [
   { href: "/", label: "Início" },
-  { href: "/ensaios", label: "Ensaios" },
-  { href: "/gatos", label: "Gatos" },
+  { href: "/ensaios", label: "Sobre Mim" },
+  { href: "/gatos", label: "Ensaios" },
   { href: "/about", label: "Contato" },
 ];
 ---
 
-<nav
-  class="bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-700"
->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between h-16 items-center">
-      <!-- Logo -->
-      <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">
-        Kaledo Fotos
-      </a>
-
+<nav class="bg-none absolute top-0 left-0 w-full z-50 bg p-1">
+  <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+    <div
+      class="rounded-full sm:justify-self-center sm:justify-center h-16 items-center bg-none sm:bg-white/50"
+    >
       <!-- Botão Mobile -->
       <button
         id="menu-toggle"
-        class="md:hidden inline-flex items-center p-2 text-gray-500 rounded-lg hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+        class="sm:hidden inline-flex items-center p-4 text-preto rounded-full hover:bg-gray-100/50"
         aria-controls="mobile-menu"
         aria-expanded="false"
-        onclick={() => {
-          const menu = document.getElementById("mobile-menu");
-          menu?.classList.toggle("hidden");
-        }}>
       >
         <svg
-          class="w-6 h-6"
+          class="w-8 h-8"
           fill="none"
           stroke="currentColor"
           stroke-width="2"
@@ -43,12 +34,12 @@ const links = [
       </button>
 
       <!-- Links Desktop -->
-      <div class="hidden md:flex space-x-6">
+      <div class="hidden sm:flex space-x-6">
         {
           links.map((link) => (
             <a
               href={link.href}
-              class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-white"
+              class="text-preto py-5 px-5 rounded-full hover:bg-verde/50 transition duration-500 font-secondary"
             >
               {link.label}
             </a>
@@ -59,12 +50,36 @@ const links = [
   </div>
 
   <!-- Links Mobile -->
-  <div id="mobile-menu" class="md:hidden hidden px-4 pb-4">
+  <div
+    id="mobile-menu"
+    class="fixed inset-0 bg-white/95 z-40 flex flex-col items-center justify-center space-y-6 text-xl font-secondary text-preto
+         opacity-0 pointer-events-none -translate-y-50 transition-all duration-1000 ease-in-out"
+  >
+    <!-- Botão Fechar -->
+    <button
+      id="menu-close"
+      class="absolute top-9 left-4 p-2 text-preto hover:text-bordo"
+      aria-label="Fechar menu"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-8 h-8"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
     {
       links.map((link) => (
         <a
           href={link.href}
-          class="block py-2 text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-white"
+          class="block bg-white py-5 text-preto hover:bg-verde/70 font-secondary justify-self-center p-5 rounded-full"
         >
           {link.label}
         </a>
@@ -72,3 +87,37 @@ const links = [
     }
   </div>
 </nav>
+
+<script is:inline>
+  function toggleMenu(show) {
+    const menu = document.getElementById("mobile-menu");
+
+    if (!menu) return;
+
+    if (show) {
+      menu.classList.remove(
+        "opacity-0",
+        "pointer-events-none",
+        "-translate-y-50"
+      );
+      menu.classList.add("opacity-100", "pointer-events-auto", "translate-y-0");
+      document.body.classList.add("overflow-hidden");
+    } else {
+      menu.classList.add("opacity-0", "pointer-events-none", "-translate-y-50");
+      menu.classList.remove(
+        "opacity-100",
+        "pointer-events-auto",
+        "translate-y-0"
+      );
+      document.body.classList.remove("overflow-hidden");
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const openBtn = document.getElementById("menu-toggle");
+    const closeBtn = document.getElementById("menu-close");
+
+    openBtn?.addEventListener("click", () => toggleMenu(true));
+    closeBtn?.addEventListener("click", () => toggleMenu(false));
+  });
+</script>

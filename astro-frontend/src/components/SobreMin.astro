@@ -1,0 +1,42 @@
+---
+import fetchApi from "../lib/strapi";
+import type { SobreMim } from "../interfaces/sobreMim";
+
+const sobreMim: SobreMim = await fetchApi<SobreMim>({
+  endpoint: "pagina-sobre-mim",
+  query: {
+    populate: "Foto",
+  },
+  wrappedByKey: "data",
+});
+
+---
+
+<div class="bg-verde h-screen flex items-center justify-center">
+  <div
+    class="max-w-5xl mx-auto px-4 py-12 flex flex-col md:flex-row items-center gap-8 snap-center"
+  >
+    <!-- Imagem -->
+    <div class="w-full md:w-1/2 flex justify-center">
+      <img
+        src={`http://localhost:1337${sobreMim.Foto.url}`}
+        alt="Foto sobre mim" 
+        class="w-64 h-80 rounded-full object-cover shadow-lg/50 border-1 border-preto"
+      />
+    </div>
+
+    <!-- Texto -->
+    <div class="w-full md:w-1/2">
+      <h2
+        class="text-3xl font-bold mb-4 font-primary text-bege-claro text-shadow-lg/35"
+      >
+        Sobre mim
+      </h2>
+      <p
+        class="leading-relaxed text-justify font-secondary text-bege-claro text-shadow-lg/30"
+      >
+        {sobreMim.Texto}
+      </p>
+    </div>
+  </div>
+</div>

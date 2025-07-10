@@ -4,7 +4,7 @@
   "info": {
     "singularName": "global",
     "pluralName": "globals",
-    "displayName": "Home",
+    "displayName": "Global",
     "description": "Define global settings"
   },
   "options": {
@@ -22,13 +22,17 @@
       "required": false,
       "allowedTypes": [
         "images",
-        "files",
-        "videos"
+        "files"
       ]
     },
-    "siteDescription": {
-      "type": "text",
-      "required": true
+    "Logo": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images",
+        "files"
+      ]
     },
     "defaultSeo": {
       "type": "component",
