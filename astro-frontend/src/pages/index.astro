@@ -1,30 +1,20 @@
 ---
-import Welcome from "../components/Welcome.astro";
 import Layout from "../layouts/Layout.astro";
-import SobreMin from "../components/SobreMin.astro";
+import HomeSection from "../components/HomeSection.astro";
+import SobreMinSection from "../components/SobreMinSection.astro";
 import EnsaiosSection from "../components/EnsaiosSection.astro";
-import Contato from "../components/Contato.astro";
+import ContatoSection from "../components/ContatoSection.astro";
 
-const hero_image = "https://cataas.com/cat";
-const titulo = "AMANDA ARAÚJO";
+
 ---
 
-<Layout title="Kaledo Fotos">
-  <div class="relative h-screen">
-    <img class="object-cover h-screen w-full" src={hero_image} alt="" />
+<Layout>
 
-    <div
-      class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center"
-    >
-      <h1 class="text-4xl font-bold text-white mb-4 font-primary text-shadow-lg/30">{titulo}</h1>
-    </div>
-  </div>
+  <HomeSection />
 
-  <!-- SOBRE MIM -->
-  <SobreMin/>
+  <SobreMinSection />
 
-  <EnsaiosSection/>
+  <EnsaiosSection />
 
-  <Contato/>
-  
+  <ContatoSection />
 </Layout>

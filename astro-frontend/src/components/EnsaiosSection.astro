@@ -12,10 +12,9 @@ const ensaios: Ensaio[] = await fetchApi<Ensaio[]>({
   wrappedByKey: "data",
 });
 
-const foto_ensaio = "https://cataas.com/cat";
 ---
 
-<section class="py-12 px-6 min-h-screen content-center">
+<section id="Ensaios" class="py-12 px-6 min-h-screen content-center">
   <div class="max-w-6xl mx-auto">
     <h2 class="text-3xl font-bold mb-10 text-center font-primary text-preto">
       Ensaios
@@ -26,42 +25,12 @@ const foto_ensaio = "https://cataas.com/cat";
         ensaios.map((ensaio) => (
           <EnsaioCard
             titulo={ensaio.Titulo}
-            foto_url={`http://localhost:1337${ensaio.Foto_capa.url}`}
+            foto_url={`${import.meta.env.STRAPI_URL}${ensaio.Foto_capa.url}`}
             foto_name={ensaio.Foto_capa.name}
             link={`/ensaios/${ensaio.link_da_pagina}`}
           />
         ))
       }
-
-      <EnsaioCard
-        titulo="Ensaio 1"
-        foto_url={foto_ensaio}
-        foto_name="ensaio-1"
-        link="/ensaio-1"
-      />
-
-      <EnsaioCard
-        titulo="Ensaio 1"
-        foto_url={foto_ensaio}
-        foto_name="ensaio-1"
-        link="/ensaio-1"
-      />
-
-      <EnsaioCard
-        titulo="Ensaio 1"
-        foto_url={foto_ensaio}
-        foto_name="ensaio-1"
-        link="/ensaio-1"
-      />
-
-      <EnsaioCard
-        titulo="Ensaio 1"
-        foto_url={foto_ensaio}
-        foto_name="ensaio-1"
-        link="/ensaio-1"
-      />
-
-      <!-- Repita os cards com conteúdo diferente -->
     </div>
   </div>
 </section>

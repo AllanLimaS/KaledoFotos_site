@@ -24,7 +24,12 @@ const ensaios: Ensaio[] = await fetchApi<Ensaio[]>({
             {ensaio.Titulo}
           </h3>
 
-          <a href={`/ensaios/${ensaio.link_da_pagina}`} class="text-blue-500 hover:underline">{ensaio.Titulo}</a>
+          <a
+            href={`/ensaios/${ensaio.link_da_pagina}`}
+            class="text-blue-500 hover:underline"
+          >
+            {ensaio.Titulo}
+          </a>
 
           <div class="flex flex-col gap-2 items-center">
             {ensaio.Fotos.map((fotoComponent: FotoComponent) => (
@@ -36,7 +41,7 @@ const ensaios: Ensaio[] = await fetchApi<Ensaio[]>({
                   {fotoComponent.Informacoes_complementares}
                 </span>
                 <img
-                  src={`http://localhost:1337${fotoComponent.Foto.url}`}
+                  src={`${import.meta.env.STRAPI_URL}${fotoComponent.Foto.url}`}
                   alt={fotoComponent.Titulo_da_foto}
                   class="rounded shadow max-w-full max-h-48 object-cover"
                 />

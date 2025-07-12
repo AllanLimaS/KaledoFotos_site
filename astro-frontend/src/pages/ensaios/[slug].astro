@@ -1,6 +1,5 @@
 ---
 // Imports
-import type { APIContext } from "astro";
 import fetchApi from "../../lib/strapi";
 import type { Ensaio } from "../../interfaces/ensaio";
 
@@ -15,7 +14,7 @@ export async function getStaticPaths() {
   });
 
   return ensaios.map((ensaio) => ({
-    params: { slug: ensaio.link_da_pagina }, // ou pode usar o titulo slugificado
+    params: { slug: ensaio.link_da_pagina },
     props: { ensaio },
   }));
 }
@@ -24,20 +23,32 @@ export async function getStaticPaths() {
 const { ensaio } = Astro.props;
 ---
 
-<Layout>
-  <h1>{ensaio.Titulo}</h1>
-  <p>{ensaio.Descricao}</p>
+<Layout title_sufixo=`${ensaio.Titulo}`>
+  <h1 class="text-3xl font-primary text-preto mb-4 mt-25 text-center px-8">
+    {ensaio.Titulo}
+  </h1>
+  <p class="text-lg font-secondary text-preto mb-4 text-center px-8">
+    {ensaio.Descricao}
+  </p>
 
-  <div>
+  <!-- GALERIA -->
+  <div
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 items-start justify-self-center gap-10 sm:gap-5 px-8 py-8"
+  >
     {
-      ensaio.Fotos.map((foto) => (
-        <div>
-          <img
-            src={`http://localhost:1337${foto.Foto.url}`}
-            alt={foto.Foto.alternativeText || "Imagem"}
-            width="400"
-          />
-          <p>{foto.Titulo_da_foto}</p>
+      [0, 1, 2].map((colIndex) => (
+        <div class="grid gap-10 sm:gap-5 max-w-[400px] justify-self-center">
+          {ensaio.Fotos.filter((_, index) => index % 3 === colIndex).map(
+            (foto) => (
+              <div class="shadow-xl/20 transition-transform duration-300 hover:scale-105">
+                <img
+                  src={`${import.meta.env.STRAPI_URL}${foto.Foto.url}`}
+                  alt={foto.Foto.alternativeText || "Imagem"}
+                  class="h-auto w-full max-w-full object-cover"
+                />
+              </div>
+            )
+          )}
         </div>
       ))
     }

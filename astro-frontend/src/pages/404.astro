@@ -1,11 +1,19 @@
 ---
-import Welcome from "../components/Welcome.astro";
 import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout title="Página não encontrada">
-    <div class="flex flex-col items-center justify-items-center min-h-svh">
-        <h1> Página não encontrada </h1>
-        <a href="/">Página inicial</a>
-    </div>
+<Layout title_sufixo="Página não encontrada">
+  <div
+    class="flex flex-col items-center justify-center min-h-svh bg-bege-claro/50 font-secondary text-preto"
+  >
+    <h2 class="px-8 text-8xl text-shadow-lg">404...</h2>
+    <h1 class="px-8 text-2xl text-shadow-lg">Página não encontrada</h1>
+
+    <a
+      href="/"
+      class="mt-5 bg-preto text-white px-6 py-2 rounded-lg font-bold hover:bg-bege-escuro transition"
+    >
+      Página inicial
+    </a>
+  </div>
 </Layout>

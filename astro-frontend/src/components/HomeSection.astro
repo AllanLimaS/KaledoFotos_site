@@ -1,0 +1,28 @@
+---
+import fetchApi from "../lib/strapi";
+import type { Home } from "../interfaces/home";
+
+const home: Home = await fetchApi<Home>({
+  endpoint: "pagina-inicial",
+  query: {
+    "populate[Carrossel]": "1",
+  },
+  wrappedByKey: "data",
+});
+
+const hero_image = `${import.meta.env.STRAPI_URL}${home.Carrossel[0].url}`;
+---
+
+<section id="Home" class="relative h-screen">
+  <img class="object-cover h-screen w-full" src={hero_image} alt="" />
+
+  <div
+    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center"
+  >
+    <h1
+      class="text-4xl font-bold text-white mb-4 font-primary text-shadow-lg/30"
+    >
+      {home.Titulo}
+    </h1>
+  </div>
+</section>

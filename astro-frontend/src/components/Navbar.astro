@@ -1,21 +1,21 @@
 ---
 const links = [
-  { href: "/", label: "Início" },
-  { href: "/ensaios", label: "Sobre Mim" },
-  { href: "/gatos", label: "Ensaios" },
-  { href: "/about", label: "Contato" },
+  { href: "/#Home", label: "Início" },
+  { href: "/#SobreMin", label: "Sobre Mim" },
+  { href: "/#Ensaios", label: "Ensaios" },
+  { href: "/#Contato", label: "Contato" },
 ];
 ---
 
-<nav class="bg-none absolute top-0 left-0 w-full z-50 bg p-1">
+<nav class="fixed bg-none top-0 left-0 w-full z-50 bg p-1">
   <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
     <div
-      class="rounded-full sm:justify-self-center sm:justify-center h-16 items-center bg-none sm:bg-white/50"
+      class="bg-none rounded-full sm:justify-self-center sm:justify-center h-16 items-center sm:bg-white/40 sm:backdrop-blur-sm"
     >
       <!-- Botão Mobile -->
       <button
         id="menu-toggle"
-        class="sm:hidden inline-flex items-center p-4 text-preto rounded-full hover:bg-gray-100/50"
+        class="sm:hidden inline-flex items-center p-4 text-preto rounded-full backdrop-blur-xs bg-gray-100/20 hover:bg-gray-100/50 transition duration-500"
         aria-controls="mobile-menu"
         aria-expanded="false"
       >
@@ -39,7 +39,7 @@ const links = [
           links.map((link) => (
             <a
               href={link.href}
-              class="text-preto py-5 px-5 rounded-full hover:bg-verde/50 transition duration-500 font-secondary"
+              class="text-preto py-5 px-5 rounded-full hover:bg-verde/50 transition duration-500 font-semibold font-secondary"
             >
               {link.label}
             </a>
@@ -52,8 +52,8 @@ const links = [
   <!-- Links Mobile -->
   <div
     id="mobile-menu"
-    class="fixed inset-0 bg-white/95 z-40 flex flex-col items-center justify-center space-y-6 text-xl font-secondary text-preto
-         opacity-0 pointer-events-none -translate-y-50 transition-all duration-1000 ease-in-out"
+    class="fixed inset-0 bg-white/50 z-40 flex flex-col items-center justify-center space-y-6 text-xl font-secondary text-preto
+         opacity-0 pointer-events-none -translate-y-50 transition-all duration-1000 ease-in-out backdrop-blur-lg"
   >
     <!-- Botão Fechar -->
     <button
@@ -79,7 +79,7 @@ const links = [
       links.map((link) => (
         <a
           href={link.href}
-          class="block bg-white py-5 text-preto hover:bg-verde/70 font-secondary justify-self-center p-5 rounded-full"
+          class="menu-close-item block bg-white py-5 text-preto hover:bg-verde/70 font-secondary justify-self-center p-5 rounded-full"
         >
           {link.label}
         </a>
@@ -116,8 +116,13 @@ const links = [
   document.addEventListener("DOMContentLoaded", () => {
     const openBtn = document.getElementById("menu-toggle");
     const closeBtn = document.getElementById("menu-close");
+    const closeBtnItems = document.querySelectorAll(".menu-close-item");
 
     openBtn?.addEventListener("click", () => toggleMenu(true));
     closeBtn?.addEventListener("click", () => toggleMenu(false));
+
+    closeBtnItems.forEach((item) =>
+      item.addEventListener("click", () => toggleMenu(false))
+    );
   });
 </script>
