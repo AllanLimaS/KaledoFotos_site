@@ -1,0 +1,44 @@
+# ARGs
+ARG STRAPI_URL
+ARG PUBLIC_SITE_URL
+ARG STRAPI_TOKEN
+
+FROM node:20-alpine AS builder
+
+# Define diretório de trabalho
+WORKDIR /app
+
+# Copia arquivos para dentro da imagem
+COPY . .
+
+# Instala dependências
+RUN npm install
+
+# ARGs
+ARG STRAPI_URL
+ARG PUBLIC_SITE_URL
+ARG STRAPI_TOKEN
+
+# Converta para ENV se necessário
+ENV STRAPI_URL=$STRAPI_URL 
+ENV PUBLIC_SITE_URL=$PUBLIC_SITE_URL 
+ENV STRAPI_TOKEN=$STRAPI_TOKEN
+
+# Gera o build estático
+RUN npm run build
+
+
+# Etapa 2: Servir os arquivos estáticos com NGINX
+FROM nginx:alpine
+
+# Copia os arquivos gerados para a pasta pública do NGINX
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Remove configuração default e (opcionalmente) adiciona uma personalizada
+# COPY nginx.conf /etc/nginx/nginx.conf
+
+# Exponha a porta padrão do NGINX
+EXPOSE 80
+
+# Comando padrão
+CMD ["nginx", "-g", "daemon off;"]
