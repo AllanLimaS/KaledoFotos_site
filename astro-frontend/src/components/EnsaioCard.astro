@@ -4,9 +4,7 @@ const { titulo, foto_url, foto_name, link } = Astro.props;
 
 <!-- Card -->
 <a href={link} class="block group w-[300px]">
-  <div
-    class="relative aspect-square overflow-hidden shadow-lg/50 group"
-  >
+  <div class="relative aspect-square overflow-hidden shadow-lg/50 group">
     <img
       src={foto_url}
       alt={foto_name}
@@ -15,6 +13,7 @@ const { titulo, foto_url, foto_name, link } = Astro.props;
     <div class="absolute bottom-0 w-full p-4">
       <h3
         class="text-lg font-secondary text-white text-center text-shadow-lg/10"
+        transition:name=`titulo_${titulo.replace(/[^a-z0-9]/gi, "_").toLowerCase()}`
       >
         {titulo}
       </h3>

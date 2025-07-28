@@ -2,23 +2,24 @@
 // Imports
 import fetchApi from "../../lib/strapi";
 import type { Ensaio } from "../../interfaces/ensaio";
+import { Image, Picture } from "astro:assets";
 
 import Layout from "../../layouts/Layout.astro";
 
 // Gerador de rotas estáticas
 export async function getStaticPaths() {
   try {
-  const ensaios = await fetchApi<Ensaio[]>({
-    endpoint: "ensaios",
-    query: { "populate[Fotos][populate]": "Foto" },
-    wrappedByKey: "data",
-  });
+    const ensaios = await fetchApi<Ensaio[]>({
+      endpoint: "ensaios",
+      query: { "populate[Fotos][populate]": "Foto" },
+      wrappedByKey: "data",
+    });
 
-  return ensaios.map((ensaio) => ({
-    params: { slug: ensaio.link_da_pagina },
-    props: { ensaio },
-  }));
-} catch (error) {
+    return ensaios.map((ensaio) => ({
+      params: { slug: ensaio.link_da_pagina },
+      props: { ensaio },
+    }));
+  } catch (error) {
     console.error("Erro ao buscar ensaios:", error);
     return [];
   }
@@ -29,7 +30,11 @@ const { ensaio } = Astro.props;
 ---
 
 <Layout title_sufixo=`${ensaio.Titulo}`>
-  <h1 class="text-3xl font-primary text-preto mb-4 mt-25 text-center px-8">
+  <h1
+    class="text-3xl font-primary text-preto mb-4 mt-25 text-center px-8"
+    transition:name=`titulo_${ensaio.Titulo.replace(/[^a-z0-9]/gi, "_").toLowerCase()}`
+    transition:persist
+  >
     {ensaio.Titulo}
   </h1>
   <p class="text-lg font-secondary text-preto mb-4 text-center px-8">
@@ -46,10 +51,14 @@ const { ensaio } = Astro.props;
           {ensaio.Fotos.filter((_, index) => index % 3 === colIndex).map(
             (foto) => (
               <div class="shadow-xl/20 transition-transform duration-300 hover:scale-105">
-                <img
+                <Image
                   src={`${import.meta.env.STRAPI_URL}${foto.Foto.url}`}
+                  width={400}
+                  height={400}
+                  decoding={"async"}
                   alt={foto.Foto.alternativeText || "Imagem"}
                   class="h-auto w-full max-w-full object-cover"
+                  loading="lazy"
                 />
               </div>
             )

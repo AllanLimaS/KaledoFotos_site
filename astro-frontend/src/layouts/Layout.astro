@@ -5,6 +5,8 @@ import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
 import fetchApi from "../lib/strapi";
 
+import { ClientRouter } from "astro:transitions";
+
 import type { Global } from "../interfaces/global";
 
 import "@fontsource/aboreto";
@@ -65,6 +67,8 @@ interface Props {
     <meta name="twitter:title" content={MetaTitle} />
     <meta name="twitter:description" content={MetaDescription} />
     <meta name="twitter:image" content={MetaShareImage} />
+
+    <ClientRouter />
   </head>
   <body>
     <Navbar />
