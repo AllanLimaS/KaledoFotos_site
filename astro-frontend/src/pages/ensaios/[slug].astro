@@ -3,6 +3,7 @@
 import fetchApi from "../../lib/strapi";
 import type { Ensaio } from "../../interfaces/ensaio";
 import { Image, Picture } from "astro:assets";
+import Loader from "../../components/Loader.astro";
 
 import Layout from "../../layouts/Layout.astro";
 
@@ -30,6 +31,8 @@ const { ensaio } = Astro.props;
 ---
 
 <Layout title_sufixo=`${ensaio.Titulo}`>
+  <Loader WaitForFonts={true} />
+
   <h1
     class="text-3xl font-primary text-preto mb-4 mt-25 text-center px-8"
     transition:name=`titulo_${ensaio.Titulo.replace(/[^a-z0-9]/gi, "_").toLowerCase()}`
@@ -57,7 +60,7 @@ const { ensaio } = Astro.props;
                   height={400}
                   decoding={"async"}
                   alt={foto.Foto.alternativeText || "Imagem"}
-                  class="h-auto w-full max-w-full object-cover"
+                  class="h-auto w-full max-w-full object-cover fade-in-img opacity-0 transition-opacity duration-1000"
                   loading="lazy"
                 />
               </div>
@@ -67,4 +70,19 @@ const { ensaio } = Astro.props;
       ))
     }
   </div>
+
+  <script is:inline>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll(".fade-in-img").forEach((img) => {
+        if (img.complete) {
+          // já carregada no cache
+          img.classList.remove("opacity-0");
+        } else {
+          img.addEventListener("load", () => {
+            img.classList.remove("opacity-0");
+          });
+        }
+      });
+    });
+  </script>
 </Layout>

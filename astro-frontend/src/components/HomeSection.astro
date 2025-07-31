@@ -1,6 +1,7 @@
 ---
 import fetchApi from "../lib/strapi";
 import type { Home } from "../interfaces/home";
+import Loader from "./Loader.astro";
 
 const home: Home = await fetchApi<Home>({
   endpoint: "pagina-inicial",
@@ -14,7 +15,14 @@ const hero_image = `${import.meta.env.STRAPI_URL}${home.Carrossel[0].url}`;
 ---
 
 <section id="Home" class="relative h-screen">
-  <img class="object-cover h-screen w-full" src={hero_image} alt="" />
+  <img
+    id="hero_img"
+    class="object-cover h-screen w-full"
+    src={hero_image}
+    alt=""
+  />
+
+  <Loader IdImg="hero_img"/>
 
   <div
     class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center"

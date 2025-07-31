@@ -1,0 +1,37 @@
+---
+const { IdImg, WaitForFonts = false } = Astro.props;
+---
+
+<div
+  id="loader"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-1000"
+>
+  <div
+    class="h-10 w-10 animate-spin rounded-full border-4 border-bege-escuro border-t-transparent"
+  >
+  </div>
+</div>
+
+<script define:vars={{ IdImg, WaitForFonts }}>
+
+   console.info("Loader initialized with IdImg:", IdImg, "WaitForFonts:", WaitForFonts);
+  const heroImg = document.getElementById(IdImg);
+  const loader = document.getElementById("loader");
+
+  heroImg?.addEventListener("load", hideLoader);
+
+  if (WaitForFonts) {
+    document.fonts.ready.then(() => {
+      hideLoader();
+    });
+  }
+
+  function hideLoader() {
+    console.info("hideloader");
+    if (loader) {
+      loader.style.opacity = "0";
+      loader.style.pointerEvents = "none";
+      setTimeout(() => loader.remove(), 500);
+    }
+  }
+</script>
