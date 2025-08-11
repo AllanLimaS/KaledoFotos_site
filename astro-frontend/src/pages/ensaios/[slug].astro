@@ -12,7 +12,9 @@ export async function getStaticPaths() {
   try {
     const ensaios = await fetchApi<Ensaio[]>({
       endpoint: "ensaios",
-      query: { "populate[Fotos][populate]": "Foto" },
+      query: { "populate[Fotos]": "1" ,
+                "populate[Foto_capa]": "1"
+      },
       wrappedByKey: "data",
     });
 
@@ -55,11 +57,11 @@ const { ensaio } = Astro.props;
             (foto) => (
               <div class="shadow-xl/20 transition-transform duration-300 hover:scale-105">
                 <Image
-                  src={`${import.meta.env.STRAPI_URL}${foto.Foto.url}`}
+                  src={`${import.meta.env.STRAPI_URL}${foto.url}`}
                   width={400}
                   height={400}
                   decoding={"async"}
-                  alt={foto.Foto.alternativeText || "Imagem"}
+                  alt={foto.alternativeText || "Imagem"}
                   class="h-auto w-full max-w-full object-cover fade-in-img opacity-0 transition-opacity duration-1000"
                   loading="lazy"
                 />

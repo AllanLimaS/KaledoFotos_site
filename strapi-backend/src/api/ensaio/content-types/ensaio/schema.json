@@ -35,11 +35,13 @@
       ]
     },
     "Fotos": {
-      "type": "component",
-      "component": "shared.teste",
-      "repeatable": true,
+      "type": "media",
+      "multiple": true,
       "required": true,
-      "min": 1
+      "allowedTypes": [
+        "images",
+        "files"
+      ]
     }
   }
 }

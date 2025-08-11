@@ -427,14 +427,8 @@ export interface ApiEnsaioEnsaio extends Struct.CollectionTypeSchema {
     Descricao: Schema.Attribute.Text;
     Foto_capa: Schema.Attribute.Media<'images' | 'files'> &
       Schema.Attribute.Required;
-    Fotos: Schema.Attribute.Component<'shared.teste', true> &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 1;
-        },
-        number
-      >;
+    Fotos: Schema.Attribute.Media<'images' | 'files', true> &
+      Schema.Attribute.Required;
     link_da_pagina: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
@@ -448,33 +442,6 @@ export interface ApiEnsaioEnsaio extends Struct.CollectionTypeSchema {
     Titulo: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'Ensaio ####'>;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiFooterFooter extends Struct.SingleTypeSchema {
-  collectionName: 'footers';
-  info: {
-    displayName: 'Rodap\u00E9';
-    pluralName: 'footers';
-    singularName: 'footer';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::footer.footer'
-    > &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -497,7 +464,6 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     defaultSeo: Schema.Attribute.Component<'shared.seo', false>;
-    favicon: Schema.Attribute.Media<'images' | 'files'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -568,7 +534,7 @@ export interface ApiPaginaSobreMimPaginaSobreMim
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
-    Texto: Schema.Attribute.Text & Schema.Attribute.Required;
+    Texto: Schema.Attribute.RichText & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1086,7 +1052,6 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::contato.contato': ApiContatoContato;
       'api::ensaio.ensaio': ApiEnsaioEnsaio;
-      'api::footer.footer': ApiFooterFooter;
       'api::global.global': ApiGlobalGlobal;
       'api::pagina-inicial.pagina-inicial': ApiPaginaInicialPaginaInicial;
       'api::pagina-sobre-mim.pagina-sobre-mim': ApiPaginaSobreMimPaginaSobreMim;

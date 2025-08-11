@@ -16,15 +16,6 @@
       "type": "string",
       "required": true
     },
-    "favicon": {
-      "type": "media",
-      "multiple": false,
-      "required": false,
-      "allowedTypes": [
-        "images",
-        "files"
-      ]
-    },
     "Logo": {
       "type": "media",
       "multiple": false,
