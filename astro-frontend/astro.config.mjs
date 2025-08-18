@@ -13,4 +13,7 @@ export default defineConfig({
   image: {
     domains: ["localhost", strapiUrl],
   },
+  redirects: {
+    "/ensaios": "/#Ensaios",
+  },
 });

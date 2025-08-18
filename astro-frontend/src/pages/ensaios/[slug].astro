@@ -13,7 +13,7 @@ export async function getStaticPaths() {
     const ensaios = await fetchApi<Ensaio[]>({
       endpoint: "ensaios",
       query: { "populate[Fotos]": "1" ,
-                "populate[Foto_capa]": "1"
+                //"populate[Foto_capa]": "1"
       },
       wrappedByKey: "data",
     });
