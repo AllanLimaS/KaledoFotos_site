@@ -1,5 +1,6 @@
 ---
 import fetchApi from "../lib/strapi";
+import { CheckImageUrl } from "../lib/utils";
 import type { SobreMim } from "../interfaces/sobreMim";
 import { marked } from "marked";
 
@@ -25,7 +26,7 @@ console.log("SobreMim data fetched:", SobreMinText);
     <!-- Imagem -->
     <div class="w-full md:w-1/2 flex justify-center">
       <img
-        src={`${import.meta.env.STRAPI_URL}${sobreMim.Foto.url}`}
+        src={`${CheckImageUrl(sobreMim.Foto.url)}`}
         alt="Foto sobre mim"
         class="w-64 h-80 rounded-full object-cover shadow-lg/50 border-1 border-preto"
       />

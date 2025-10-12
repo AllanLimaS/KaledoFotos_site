@@ -1,5 +1,6 @@
 ---
 import fetchApi from "../lib/strapi";
+import { CheckImageUrl } from "../lib/utils";
 import type { Home } from "../interfaces/home";
 import Loader from "./Loader.astro";
 
@@ -11,7 +12,7 @@ const home: Home = await fetchApi<Home>({
   wrappedByKey: "data",
 });
 
-const hero_image = `${import.meta.env.STRAPI_URL}${home.Carrossel[0].url}`;
+const hero_image = `${CheckImageUrl(home.Carrossel[0].url)}`;
 ---
 
 <section id="Home" class="relative h-screen">
@@ -22,7 +23,7 @@ const hero_image = `${import.meta.env.STRAPI_URL}${home.Carrossel[0].url}`;
     alt=""
   />
 
-  <Loader IdImg="hero_img"/>
+  <Loader IdImg="hero_img" />
 
   <div
     class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center"

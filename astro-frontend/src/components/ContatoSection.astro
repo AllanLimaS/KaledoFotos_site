@@ -1,5 +1,6 @@
 ---
 import fetchApi from "../lib/strapi";
+import { CheckImageUrl } from "../lib/utils";
 import type { Contato } from "../interfaces/contato";
 
 const contato: Contato = await fetchApi<Contato>({
@@ -17,7 +18,7 @@ console.log("Contato data:", contato);
 <section id="Contato">
   <div
     class="w-full h-[300px] bg-cover bg-center flex items-center justify-center"
-    style={`background-image: url('${`${import.meta.env.STRAPI_URL}${contato.Foto_fundo.url}`}');`}
+    style={`background-image: url('${`${CheckImageUrl(contato.Foto_fundo.url)}`}');`}
   >
     <h2
       class="text-white px-5 text-2xl md:text-3xl lg:text-4xl font-primary font-bold text-center drop-shadow-lg/50"

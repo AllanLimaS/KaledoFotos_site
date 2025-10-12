@@ -1,6 +1,7 @@
 ---
 // Imports
 import fetchApi from "../../lib/strapi";
+import { CheckImageUrl } from "../../lib/utils";
 import type { Ensaio } from "../../interfaces/ensaio";
 import { Image, Picture } from "astro:assets";
 import Loader from "../../components/Loader.astro";
@@ -12,8 +13,9 @@ export async function getStaticPaths() {
   try {
     const ensaios = await fetchApi<Ensaio[]>({
       endpoint: "ensaios",
-      query: { "populate[Fotos]": "1" ,
-                //"populate[Foto_capa]": "1"
+      query: {
+        "populate[Fotos]": "1",
+        //"populate[Foto_capa]": "1"
       },
       wrappedByKey: "data",
     });
@@ -57,7 +59,7 @@ const { ensaio } = Astro.props;
             (foto) => (
               <div class="shadow-xl/20 transition-transform duration-300 hover:scale-105">
                 <Image
-                  src={`${import.meta.env.STRAPI_URL}${foto.url}`}
+                  src={`${CheckImageUrl(foto.url)}`}
                   width={400}
                   height={400}
                   decoding={"async"}
