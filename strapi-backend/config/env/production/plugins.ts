@@ -6,6 +6,7 @@ export default ({ env }) => ({
         cloud_name: env("CLOUDINARY_NAME"),
         api_key: env("CLOUDINARY_KEY"),
         api_secret: env("CLOUDINARY_SECRET"),
+        timeout: 120000,
       },
       actionOptions: {
         upload: {
@@ -16,6 +17,7 @@ export default ({ env }) => ({
         },
         delete: {},
       },
+      sizeLimit: 10 * 1024 * 1024, // 10 MB por arquivo
     },
   },
 });
