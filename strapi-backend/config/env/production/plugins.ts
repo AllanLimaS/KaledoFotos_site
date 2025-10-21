@@ -1,18 +1,13 @@
-export default ({ env }) => ({
-  upload: {
+export default () => ({
+  // ...
+  'webp-converter': {
+    enabled: true,
     config: {
-      provider: "local",
-      providerOptions: {
-        timeout: 250000,
+      // mimeTypes that converts to WebP. Default is ['image/png', 'image/jpeg', 'image/jpg']
+      mimeTypes: undefined,
+      options: {
+        // WebP options: https://sharp.pixelplumbing.com/api-output#webp
       },
-      actionOptions: {
-        upload: {
-        },
-        uploadStream: {
-        },
-        delete: {},
-      },
-      sizeLimit: 250 * 1024 * 1024, // 10 MB por arquivo
     },
   },
 });

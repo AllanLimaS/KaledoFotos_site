@@ -461,7 +461,6 @@ export interface ApiContatoContato extends Struct.SingleTypeSchema {
         },
         number
       >;
-    teste: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

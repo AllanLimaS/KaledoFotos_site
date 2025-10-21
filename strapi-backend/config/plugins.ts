@@ -1,20 +1,12 @@
-export default ({ env }) => ({
-  upload: {
+export default () => ({
+  // ...
+  'webp-converter': {
+    enabled: true,
     config: {
-      provider: "cloudinary",
-      providerOptions: {
-        cloud_name: env("CLOUDINARY_NAME"),
-        api_key: env("CLOUDINARY_KEY"),
-        api_secret: env("CLOUDINARY_SECRET"),
-      },
-      actionOptions: {
-        upload: {
-          folder: env("CLOUDINARY_FOLDER"),
-        },
-        uploadStream: {
-          folder: env("CLOUDINARY_FOLDER"),
-        },
-        delete: {},
+      // mimeTypes that converts to WebP. Default is ['image/png', 'image/jpeg', 'image/jpg']
+      mimeTypes: undefined,
+      options: {
+        // WebP options: https://sharp.pixelplumbing.com/api-output#webp
       },
     },
   },
