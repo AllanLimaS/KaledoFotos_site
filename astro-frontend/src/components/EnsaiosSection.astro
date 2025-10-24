@@ -1,16 +1,11 @@
 ---
-import fetchApi from "../lib/strapi";
 import { CheckImageUrl } from "../lib/utils";
 import EnsaioCard from "../components/EnsaioCard.astro";
 import type { Ensaio } from "../interfaces/ensaio";
 
-const ensaios: Ensaio[] = await fetchApi<Ensaio[]>({
-  endpoint: "ensaios",
-  query: {
-    populate: "Foto_capa",
-  },
-  wrappedByKey: "data",
-});
+const props = Astro.props as { ensaios: Ensaio[] };
+const { ensaios } = props;
+
 ---
 
 <section id="Ensaios" class="py-12 px-6 min-h-screen content-center">

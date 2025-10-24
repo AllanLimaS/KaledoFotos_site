@@ -1,19 +1,12 @@
 ---
-import fetchApi from "../lib/strapi";
 import { CheckImageUrl } from "../lib/utils";
 import type { SobreMim } from "../interfaces/sobreMim";
 import { marked } from "marked";
 
-const sobreMim: SobreMim = await fetchApi<SobreMim>({
-  endpoint: "pagina-sobre-mim",
-  query: {
-    populate: "Foto",
-  },
-  wrappedByKey: "data",
-});
+const props = Astro.props as { sobreMin: SobreMim };
+const { sobreMin } = props;
 
-const SobreMinText = marked.parse(sobreMim.Texto);
-console.log("SobreMim data fetched:", SobreMinText);
+const SobreMinText = marked.parse(sobreMin.Texto);
 ---
 
 <section
@@ -26,7 +19,7 @@ console.log("SobreMim data fetched:", SobreMinText);
     <!-- Imagem -->
     <div class="w-full md:w-1/2 flex justify-center">
       <img
-        src={`${CheckImageUrl(sobreMim.Foto.url)}`}
+        src={`${CheckImageUrl(sobreMin.Foto.url)}`}
         alt="Foto sobre mim"
         class="w-64 h-80 rounded-full object-cover shadow-lg/50 border-1 border-preto"
       />

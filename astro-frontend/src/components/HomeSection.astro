@@ -1,18 +1,12 @@
 ---
-import fetchApi from "../lib/strapi";
-import { CheckImageUrl } from "../lib/utils";
 import type { Home } from "../interfaces/home";
+import { CheckImageUrl } from "../lib/utils";
 import Loader from "./Loader.astro";
 
-const home: Home = await fetchApi<Home>({
-  endpoint: "pagina-inicial",
-  query: {
-    "populate[Carrossel]": "1",
-  },
-  wrappedByKey: "data",
-});
+const props = Astro.props as { home: Home };
+const { home } = props;
 
-const hero_image = `${CheckImageUrl(home.Carrossel[0].url)}`;
+const hero_image = `${CheckImageUrl(home?.Carrossel?.[0]?.url ?? "")}`;
 ---
 
 <section id="Home" class="relative h-screen">

@@ -5,16 +5,53 @@ import SobreMinSection from "../components/SobreMinSection.astro";
 import EnsaiosSection from "../components/EnsaiosSection.astro";
 import ContatoSection from "../components/ContatoSection.astro";
 
+import type { Home } from "../interfaces/home";
+import type { SobreMim } from "../interfaces/sobreMim";
+import type { Ensaio } from "../interfaces/ensaio";
+import type { Contato } from "../interfaces/contato";
 
+import fetchApi from "../lib/strapi";
+
+const home: Home = await fetchApi<Home>({
+  endpoint: "pagina-inicial",
+  query: {
+    "populate[Carrossel]": "1",
+  },
+  wrappedByKey: "data",
+});
+
+const sobreMim: SobreMim = await fetchApi<SobreMim>({
+  endpoint: "pagina-sobre-mim",
+  query: {
+    populate: "Foto",
+  },
+  wrappedByKey: "data",
+});
+
+const contato: Contato = await fetchApi<Contato>({
+  endpoint: "contato",
+  query: {
+    "populate[Foto_fundo]": "1",
+    "populate[Redes]": "1",
+  },
+  wrappedByKey: "data",
+});
+
+const ensaios: Ensaio[] = await fetchApi<Ensaio[]>({
+  endpoint: "ensaios",
+  query: {
+    populate: "Foto_capa",
+  },
+  wrappedByKey: "data",
+});
 ---
 
 <Layout>
+  <HomeSection home={home} />
 
-  <HomeSection />
+  <SobreMinSection sobreMin={sobreMim} />
 
-  <SobreMinSection />
+  <EnsaiosSection ensaios={ensaios}/>
 
-  <EnsaiosSection />
-
-  <ContatoSection />
+  <ContatoSection contato={contato} />
 </Layout>
