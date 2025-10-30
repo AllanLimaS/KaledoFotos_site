@@ -7,7 +7,6 @@ const props = Astro.props as {
   redesSociais: RedeSocial[];
 };
 const { fotoContato, redesSociais } = props;
-
 ---
 
 <section id="Contato">
@@ -60,10 +59,15 @@ const { fotoContato, redesSociais } = props;
         class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out"
       >
         <form
-          action={"contato.Formspree_link"}
+          action="https://api.web3forms.com/submit"
           method="POST"
           class="space-y-6 bg-white p-8"
         >
+          <input
+            type="hidden"
+            name="access_key"
+            value="dda386c4-d54b-4319-9a0b-a1ae7a8fb5a5"
+          />
           <!-- Nome -->
           <div>
             <label for="name" class="block mb-2 text-sm font-secondary"
@@ -127,7 +131,7 @@ const { fotoContato, redesSociais } = props;
             >
             <input
               type="text"
-              name="data-local"
+              name="Data e local do ensaio"
               id="data-local"
               placeholder="Ex: 15/08 - Praia Central"
               class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rosa focus:border-transparent"
@@ -141,7 +145,7 @@ const { fotoContato, redesSociais } = props;
             >
             <input
               type="text"
-              name="como"
+              name="como me conheceu"
               id="como"
               placeholder="Ex: Instagram, indicação, Google..."
               class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rosa focus:border-transparent"
@@ -154,7 +158,7 @@ const { fotoContato, redesSociais } = props;
               >Mensagem *</label
             >
             <textarea
-              name="message"
+              name="Mensagem"
               id="message"
               rows="5"
               required

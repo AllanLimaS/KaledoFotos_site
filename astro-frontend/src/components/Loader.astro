@@ -13,25 +13,63 @@ const { IdImg, WaitForFonts = false } = Astro.props;
 </div>
 
 <script define:vars={{ IdImg, WaitForFonts }}>
+  console.info(
+    "Loader initialized with IdImg:",
+    IdImg,
+    "WaitForFonts:",
+    WaitForFonts
+  );
 
-   console.info("Loader initialized with IdImg:", IdImg, "WaitForFonts:", WaitForFonts);
-  const heroImg = document.getElementById(IdImg);
+  const heroImages = document.querySelectorAll(`.${IdImg}`);
   const loader = document.getElementById("loader");
 
-  heroImg?.addEventListener("load", hideLoader);
+  let loadedCount = 0;
+  const totalImages = heroImages.length;
+  let fontsReady = !WaitForFonts;
 
-  if (WaitForFonts) {
-    document.fonts.ready.then(() => {
-      hideLoader();
-    });
+  function checkAndHideLoader() {
+    console.info(
+      "Check loader - Images loaded:",
+      loadedCount,
+      "Total:",
+      totalImages,
+      "Fonts ready:",
+      fontsReady
+    );
+
+    if (loadedCount === totalImages && fontsReady) {
+      console.info("hideloader");
+      if (loader) {
+        loader.style.opacity = "0";
+        loader.style.pointerEvents = "none";
+        setTimeout(() => loader.remove(), 500);
+      }
+    }
   }
 
-  function hideLoader() {
-    console.info("hideloader");
-    if (loader) {
-      loader.style.opacity = "0";
-      loader.style.pointerEvents = "none";
-      setTimeout(() => loader.remove(), 500);
+  function onImageLoad() {
+    loadedCount++;
+    checkAndHideLoader();
+  }
+
+  // Adiciona listener em todas as imagens
+  heroImages.forEach((img) => {
+    if (img.complete) {
+      loadedCount++;
+    } else {
+      img.addEventListener("load", onImageLoad);
     }
+  });
+
+  // Checa se as imagens já estavam carregadas
+  checkAndHideLoader();
+
+  // Espera as fontes se necessário
+  if (WaitForFonts) {
+    document.fonts.ready.then(() => {
+      console.info("Fonts ready");
+      fontsReady = true;
+      checkAndHideLoader();
+    });
   }
 </script>

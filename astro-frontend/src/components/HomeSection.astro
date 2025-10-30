@@ -6,21 +6,29 @@ import type { PaginaInicial } from "../interfaces/contentful";
 const props = Astro.props as { home: PaginaInicial };
 const { home } = props;
 
-const hero_image = `${CheckImageUrl(home.fotosDoCarrossel[0].fields.file.url)}`;
+const hero_images = home.fotosDoCarrossel
+  .filter((foto) => foto?.fields?.file?.url)
+  .map((foto) => `${CheckImageUrl(foto.fields.file.url)}`);
 ---
 
-<section id="Home" class="relative h-screen">
-  <img
-    id="hero_img"
-    class="object-cover h-screen w-full"
-    src={hero_image}
-    alt=""
-  />
+<section id="Home" class="relative h-screen overflow-hidden">
+  <div class="carousel-container relative h-screen w-full">
+    {
+      hero_images.map((img, index) => (
+        <img
+          class={`carousel-image hero-carousel-img object-cover h-screen w-full absolute top-0 left-0 transition-opacity duration-1000 ${index === 0 ? "opacity-100" : "opacity-0"}`}
+          src={img}
+          alt=""
+          data-index={index}
+        />
+      ))
+    }
+  </div>
 
-  <Loader IdImg="hero_img" />
+  <Loader IdImg="hero-carousel-img" />
 
   <div
-    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center"
+    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center z-10"
   >
     <h1
       class="text-4xl font-bold text-white mb-[25rem] text-nowrap font-secondary text-shadow-lg/30"
@@ -28,4 +36,136 @@ const hero_image = `${CheckImageUrl(home.fotosDoCarrossel[0].fields.file.url)}`;
       {home.titulo}
     </h1>
   </div>
+
+  <!-- Indicadores do carrossel -->
+  <div
+    class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-10"
+  >
+    {
+      hero_images.map((_, index) => (
+        <button
+          class={`carousel-indicator w-2 h-2 rounded-full transition-all duration-300 ${index === 0 ? "bg-white w-8" : "bg-white/50"}`}
+          data-index={index}
+          aria-label={`Ir para imagem ${index + 1}`}
+        />
+      ))
+    }
+  </div>
+
+  <!-- Botões de navegação (opcional) -->
+  <button
+    class="carousel-prev absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/10 hover:bg-black/30 text-white p-3 rounded-full transition-colors z-10"
+    aria-label="Imagem anterior"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-6 w-6"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M15 19l-7-7 7-7"></path>
+    </svg>
+  </button>
+  <button
+    class="carousel-next absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/10 hover:bg-black/30 text-white p-3 rounded-full transition-colors z-10"
+    aria-label="Próxima imagem"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-6 w-6"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M9 5l7 7-7 7"></path>
+    </svg>
+  </button>
 </section>
+
+<script>
+  let currentIndex = 0;
+  let autoplayInterval: number;
+  const images = document.querySelectorAll(
+    ".carousel-image"
+  ) as NodeListOf<HTMLElement>;
+  const indicators = document.querySelectorAll(
+    ".carousel-indicator"
+  ) as NodeListOf<HTMLElement>;
+  const totalImages = images.length;
+
+  function showImage(index: number) {
+    // Remove active state de todas as imagens e indicadores
+    images.forEach((img) => img.classList.remove("opacity-100"));
+    images.forEach((img) => img.classList.add("opacity-0"));
+    indicators.forEach((ind) => {
+      ind.classList.remove("bg-white", "w-8");
+      ind.classList.add("bg-white/50");
+    });
+
+    // Adiciona active state na imagem e indicador atual
+    images[index].classList.remove("opacity-0");
+    images[index].classList.add("opacity-100");
+    indicators[index].classList.remove("bg-white/50");
+    indicators[index].classList.add("bg-white", "w-8");
+
+    currentIndex = index;
+  }
+
+  function nextImage() {
+    const next = (currentIndex + 1) % totalImages;
+    showImage(next);
+  }
+
+  function prevImage() {
+    const prev = (currentIndex - 1 + totalImages) % totalImages;
+    showImage(prev);
+  }
+
+  function startAutoplay() {
+    autoplayInterval = window.setInterval(nextImage, 5000); // Muda a cada 5 segundos
+  }
+
+  function stopAutoplay() {
+    clearInterval(autoplayInterval);
+  }
+
+  // Event listeners para os botões
+  document.querySelector(".carousel-next")?.addEventListener("click", () => {
+    stopAutoplay();
+    nextImage();
+    startAutoplay();
+  });
+
+  document.querySelector(".carousel-prev")?.addEventListener("click", () => {
+    stopAutoplay();
+    prevImage();
+    startAutoplay();
+  });
+
+  // Event listeners para os indicadores
+  indicators.forEach((indicator, index) => {
+    indicator.addEventListener("click", () => {
+      stopAutoplay();
+      showImage(index);
+      startAutoplay();
+    });
+  });
+
+  // Inicia o autoplay
+  startAutoplay();
+
+  // Pausa o autoplay quando o mouse está sobre a seção
+  document.querySelector("#Home")?.addEventListener("mouseenter", stopAutoplay);
+  document
+    .querySelector("#Home")
+    ?.addEventListener("mouseleave", startAutoplay);
+</script>

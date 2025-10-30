@@ -23,6 +23,7 @@ export async function getStaticPaths() {
     };
   });
 
+  console.log("categoriasEnsaios", categoriasEnsaios);
   const pages = categoriasEnsaios.map((categoria) => ({
     params: { slug: slugify(categoria.titulo) },
     props: { categoria },
