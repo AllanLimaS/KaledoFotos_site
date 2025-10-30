@@ -1,12 +1,12 @@
 ---
-import type { Home } from "../interfaces/home";
 import { CheckImageUrl } from "../lib/utils";
 import Loader from "./Loader.astro";
+import type { PaginaInicial } from "../interfaces/contentful";
 
-const props = Astro.props as { home: Home };
+const props = Astro.props as { home: PaginaInicial };
 const { home } = props;
 
-const hero_image = `${CheckImageUrl(home?.Carrossel?.[0]?.url ?? "")}`;
+const hero_image = `${CheckImageUrl(home.fotosDoCarrossel[0].fields.file.url)}`;
 ---
 
 <section id="Home" class="relative h-screen">
@@ -25,7 +25,7 @@ const hero_image = `${CheckImageUrl(home?.Carrossel?.[0]?.url ?? "")}`;
     <h1
       class="text-4xl font-bold text-white mb-[25rem] text-nowrap font-secondary text-shadow-lg/30"
     >
-      {home.Titulo}
+      {home.titulo}
     </h1>
   </div>
 </section>

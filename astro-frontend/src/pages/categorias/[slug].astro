@@ -1,0 +1,83 @@
+---
+import { contentfulClient } from "../../lib/contentful";
+import { documentToHtmlString } from "@contentful/rich-text-html-renderer";
+import type { CategoriaEnsaio } from "../../interfaces/contentful";
+import { CheckImageUrl, slugify } from "../../lib/utils";
+
+import EnsaioCard from "../../components/EnsaioCard.astro";
+import Loader from "../../components/Loader.astro";
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  const categoriaEnsaioGet = await contentfulClient.getEntries({
+    content_type: "categoriaDeEnsaio",
+  });
+
+  const categoriasEnsaios = categoriaEnsaioGet.items.map((item) => {
+    const { titulo, descricao, fotoDeCapa, ensaios } = item.fields;
+    return {
+      titulo,
+      descricao,
+      fotoDeCapa,
+      ensaios,
+    };
+  });
+
+  const pages = categoriasEnsaios.map((categoria) => ({
+    params: { slug: slugify(categoria.titulo) },
+    props: { categoria },
+  }));
+  return pages;
+}
+
+const props = Astro.props as unknown as { categoria: CategoriaEnsaio };
+const { categoria } = props;
+
+---
+
+<Layout title_sufixo={`${categoria.titulo}`}>
+  <Loader WaitForFonts={true} />
+
+  <h1
+    class="text-3xl font-primary text-preto mb-4 mt-25 text-center px-8"
+    transition:name={`titulo_${String(categoria.titulo ?? "")
+      .replace(/[^a-z0-9]/gi, "_")
+      .toLowerCase()}`}
+    transition:persist
+  >
+    {categoria.titulo}
+  </h1>
+  <div
+    class="text-lg font-secondary text-preto mb-4 text-center px-8 markdown"
+    set:html={documentToHtmlString(categoria.descricao)}
+  />
+
+  <!-- GALERIA -->
+  <div class="flex flex-wrap justify-center gap-10">
+    {
+      categoria.ensaios.map((item) => (
+        <EnsaioCard
+          titulo={item.fields.titulo}
+          foto_url={`${CheckImageUrl(item.fields.fotoDeCapa.fields.file.url)}`}
+          foto_name={item.fields.fotoDeCapa.fields.file.url}
+          link={`/ensaios/${slugify(item.fields.titulo)}`}
+        />
+      ))
+    }
+  </div>
+
+  <script is:inline>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll(".fade-in-img").forEach((img) => {
+        if (img.complete) {
+          // já carregada no cache
+          img.classList.remove("opacity-0");
+        } else {
+          img.addEventListener("load", () => {
+            img.classList.remove("opacity-0");
+          });
+        }
+      });
+    });
+  </script>
+</Layout>

@@ -1,16 +1,19 @@
 ---
-import { CheckImageUrl } from "../lib/utils";
-import type { Contato } from "../interfaces/contato";
+import { CheckImageUrl, getSvgIcon } from "../lib/utils";
+import type { ContentfulAsset, RedeSocial } from "../interfaces/contentful";
 
-const props = Astro.props as { contato: Contato };
-const { contato } = props;
+const props = Astro.props as {
+  fotoContato: ContentfulAsset;
+  redesSociais: RedeSocial[];
+};
+const { fotoContato, redesSociais } = props;
 
 ---
 
 <section id="Contato">
   <div
     class="w-full h-[300px] bg-cover bg-center flex items-center justify-center"
-    style={`background-image: url('${`${CheckImageUrl(contato?.Foto_fundo?.url ?? '')}`}');`}
+    style={`background-image: url('${`${CheckImageUrl(fotoContato.fields.file.url)}`}');`}
   >
     <h2
       class="text-white px-5 text-2xl md:text-3xl lg:text-4xl font-primary font-bold text-center drop-shadow-lg/50"
@@ -27,15 +30,15 @@ const { contato } = props;
 
       <ul class="flex space-x-4 justify-center p-5 gap-5">
         {
-          contato.Redes.map((rede) => (
+          redesSociais.map((rede) => (
             <li>
               <a
-                href={rede.URL}
+                href={String(rede.link)}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={rede.Nome}
+                aria-label={String(rede.rede)}
                 class="text-preto hover:text-bege-escuro text-5xl transition h-10 w-10"
-                set:html={rede.Icon_svg}
+                set:html={getSvgIcon(rede.rede)}
               />
             </li>
           ))
@@ -57,7 +60,7 @@ const { contato } = props;
         class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out"
       >
         <form
-          action={contato.Formspree_link}
+          action={"contato.Formspree_link"}
           method="POST"
           class="space-y-6 bg-white p-8"
         >

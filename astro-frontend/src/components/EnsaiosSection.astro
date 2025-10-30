@@ -1,27 +1,27 @@
 ---
-import { CheckImageUrl } from "../lib/utils";
+import { CheckImageUrl, slugify } from "../lib/utils";
 import EnsaioCard from "../components/EnsaioCard.astro";
-import type { Ensaio } from "../interfaces/ensaio";
+import type { CategoriaEnsaio } from "../interfaces/contentful";
 
-const props = Astro.props as { ensaios: Ensaio[] };
-const { ensaios } = props;
+const props = Astro.props as { categoriasEnsaios: CategoriaEnsaio[] };
+const { categoriasEnsaios } = props;
 
 ---
 
 <section id="Ensaios" class="py-12 px-6 min-h-screen content-center">
   <div class="max-w-6xl mx-auto">
     <h2 class="text-3xl font-bold mb-10 text-center font-primary text-preto">
-      Ensaios
+      Tipos de Ensaios
     </h2>
 
     <div class="flex flex-wrap justify-center gap-10">
       {
-        ensaios.map((ensaio) => (
+        categoriasEnsaios.map((item) => (
           <EnsaioCard
-            titulo={ensaio.Titulo}
-            foto_url={`${CheckImageUrl(ensaio.Foto_capa.url)}`}
-            foto_name={ensaio.Foto_capa.name}
-            link={`/ensaios/${ensaio.link_da_pagina}`}
+            titulo={item.titulo}
+            foto_url={`${CheckImageUrl(item.fotoDeCapa.fields.file.url)}`}
+            foto_name={item.fotoDeCapa.fields.file.url}
+            link={`/categorias/${slugify(item.titulo)}`}
           />
         ))
       }

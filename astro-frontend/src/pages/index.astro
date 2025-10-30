@@ -5,44 +5,71 @@ import SobreMinSection from "../components/SobreMinSection.astro";
 import EnsaiosSection from "../components/EnsaiosSection.astro";
 import ContatoSection from "../components/ContatoSection.astro";
 
-import type { Home } from "../interfaces/home";
-import type { SobreMim } from "../interfaces/sobreMim";
-import type { Ensaio } from "../interfaces/ensaio";
-import type { Contato } from "../interfaces/contato";
+import { contentfulClient } from "../lib/contentful";
 
-import fetchApi from "../lib/strapi";
+// Home -- Pagina Inicial
 
-const home: Home = await fetchApi<Home>({
-  endpoint: "pagina-inicial",
-  query: {
-    "populate[Carrossel]": "1",
-  },
-  wrappedByKey: "data",
+const paginaInicialGet = await contentfulClient.getEntries({
+  content_type: "paginaInicial",
+  limit: 1,
+  include: 2, // resolve linked assets/references (images, etc.) so fields are available
 });
 
-const sobreMim: SobreMim = await fetchApi<SobreMim>({
-  endpoint: "pagina-sobre-mim",
-  query: {
-    populate: "Foto",
-  },
-  wrappedByKey: "data",
+const home_col = paginaInicialGet.items.map((item) => {
+  const { titulo, fotosDoCarrossel, fotoContato } = item.fields;
+  return {
+    titulo,
+    fotosDoCarrossel,
+    fotoContato,
+  };
+});
+const home = home_col[0];
+
+// Sobre mim
+
+const sobreMimGet = await contentfulClient.getEntries({
+  content_type: "sobreMim",
+  limit: 1,
+  include: 2, // resolve linked assets/references (images, etc.) so fields are available
 });
 
-const contato: Contato = await fetchApi<Contato>({
-  endpoint: "contato",
-  query: {
-    "populate[Foto_fundo]": "1",
-    "populate[Redes]": "1",
-  },
-  wrappedByKey: "data",
+const sobreMim_col = sobreMimGet.items.map((item) => {
+  const { foto, texto } = item.fields;
+  return {
+    foto,
+    texto,
+  };
+});
+const sobreMim = sobreMim_col[0];
+
+// Categorias de Ensaios
+const categoriaEnsaioGet = await contentfulClient.getEntries({
+  content_type: "categoriaDeEnsaio",
+  select: ["fields.titulo", "fields.fotoDeCapa"],
 });
 
-const ensaios: Ensaio[] = await fetchApi<Ensaio[]>({
-  endpoint: "ensaios",
-  query: {
-    populate: "Foto_capa",
-  },
-  wrappedByKey: "data",
+const categoriasEnsaios = categoriaEnsaioGet.items.map((item) => {
+  const { titulo, fotoDeCapa } = item.fields;
+  return {
+    titulo,
+    fotoDeCapa,
+  };
+});
+
+// Foto contato
+const fotoContato = home.fotoContato;
+
+// Redes Sociais
+const redesSociaisGet = await contentfulClient.getEntries({
+  content_type: "redeSocial",
+});
+
+const redesSociais = redesSociaisGet.items.map((item) => {
+  const { rede, link } = item.fields;
+  return {
+    rede,
+    link,
+  };
 });
 ---
 
@@ -51,7 +78,7 @@ const ensaios: Ensaio[] = await fetchApi<Ensaio[]>({
 
   <SobreMinSection sobreMin={sobreMim} />
 
-  <EnsaiosSection ensaios={ensaios}/>
+  <EnsaiosSection categoriasEnsaios={categoriasEnsaios} />
 
-  <ContatoSection contato={contato} />
+  <ContatoSection fotoContato={fotoContato} redesSociais={redesSociais} />
 </Layout>

@@ -41,10 +41,21 @@ html {
 }
 
 .markdown h2 {
-  font-size: 1.5rem;
-  /* 24px */
-  font-weight: bold;
+  /* Slightly larger than default, but lighter weight and using the secondary font */
+  font-size: 1.75rem; /* ~28px */
+  font-weight: 500; /* medium */
   margin-bottom: 0.5em;
+  font-family: "Poppins", sans-serif; /* font-secondary */
+  text-align: center;
+}
+
+.markdown h3 {
+  /* Follow h2 style but smaller */
+  font-size: 1.40rem; 
+  font-weight: 500; /* medium */
+  margin-bottom: 0.5em;
+  font-family: "Poppins", sans-serif;
+  text-align: center;
 }
 
 .markdown p {

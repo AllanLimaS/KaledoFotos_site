@@ -1,8 +1,10 @@
 ---
 // Imports
-import fetchApi from "../../lib/strapi";
-import { CheckImageUrl } from "../../lib/utils";
-import type { Ensaio } from "../../interfaces/ensaio";
+import { contentfulClient } from "../../lib/contentful";
+import { documentToHtmlString } from "@contentful/rich-text-html-renderer";
+import type { Ensaio } from "../../interfaces/contentful";
+import { CheckImageUrl, slugify } from "../../lib/utils";
+
 import { Image, Picture } from "astro:assets";
 import Loader from "../../components/Loader.astro";
 
@@ -10,43 +12,49 @@ import Layout from "../../layouts/Layout.astro";
 
 // Gerador de rotas estáticas
 export async function getStaticPaths() {
-  try {
-    const ensaios = await fetchApi<Ensaio[]>({
-      endpoint: "ensaios",
-      query: {
-        "populate[Fotos]": "1",
-        //"populate[Foto_capa]": "1"
-      },
-      wrappedByKey: "data",
-    });
+  const ensaiosGet = await contentfulClient.getEntries({
+    content_type: "ensaio",
+  });
 
-    return ensaios.map((ensaio) => ({
-      params: { slug: ensaio.link_da_pagina },
-      props: { ensaio },
-    }));
-  } catch (error) {
-    console.error("Erro ao buscar ensaios:", error);
-    return [];
-  }
+  const ensaios = ensaiosGet.items.map((item) => {
+    const { titulo, descricao, fotoDeCapa, fotos } = item.fields;
+    return {
+      titulo,
+      descricao,
+      fotoDeCapa,
+      fotos,
+    };
+  });
+
+  const pages = ensaios.map((ensaio) => ({
+    params: { slug: slugify(ensaio.titulo) },
+    props: { ensaio },
+  }));
+  return pages;
 }
 
 // Props recebidas da rota estática
-const { ensaio } = Astro.props;
+const props = Astro.props as unknown as { ensaio: Ensaio };
+const { ensaio } = props;
+
 ---
 
-<Layout title_sufixo=`${ensaio.Titulo}`>
+<Layout title_sufixo=`${ensaio.titulo}`>
   <Loader WaitForFonts={true} />
 
   <h1
     class="text-3xl font-primary text-preto mb-4 mt-25 text-center px-8"
-    transition:name=`titulo_${ensaio.Titulo.replace(/[^a-z0-9]/gi, "_").toLowerCase()}`
+    transition:name={`titulo_${String(ensaio.titulo ?? "")
+      .replace(/[^a-z0-9]/gi, "_")
+      .toLowerCase()}`}
     transition:persist
   >
-    {ensaio.Titulo}
+    {ensaio.titulo}
   </h1>
-  <p class="text-lg font-secondary text-preto mb-4 text-center px-8">
-    {ensaio.Descricao}
-  </p>
+  <div
+    class="text-lg font-secondary text-preto mb-4 text-center px-8 markdown"
+    set:html={documentToHtmlString(ensaio.descricao)}
+  />
 
   <!-- GALERIA -->
   <div
@@ -55,17 +63,19 @@ const { ensaio } = Astro.props;
     {
       [0, 1, 2].map((colIndex) => (
         <div class="grid gap-10 sm:gap-5 max-w-[400px] justify-self-center">
-          {ensaio.Fotos.filter((_, index) => index % 3 === colIndex).map(
+          {ensaio.fotos.filter((_, index) => index % 3 === colIndex).map(
             (foto) => (
               <div class="shadow-xl/20 transition-transform duration-300 hover:scale-105">
-                <Image
-                  src={`${CheckImageUrl(foto.url)}`}
-                  width={400}
-                  height={400}
+                <Picture
+                  src={`${CheckImageUrl(foto.fields.file.url)}`}
+                  width={1200}
+                  height={1200}
                   decoding={"async"}
-                  alt={foto.alternativeText || "Imagem"}
+                  alt={"Imagem do ensaio"}
+                  formats={['webp']}
                   class="h-auto w-full max-w-full object-cover fade-in-img opacity-0 transition-opacity duration-1000"
                   loading="lazy"
+                  quality={100}
                 />
               </div>
             )

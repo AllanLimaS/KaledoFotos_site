@@ -1,12 +1,14 @@
 ---
 import { CheckImageUrl } from "../lib/utils";
-import type { SobreMim } from "../interfaces/sobreMim";
-import { marked } from "marked";
+
+import type { SobreMim } from "../interfaces/contentful";
+import { documentToHtmlString } from "@contentful/rich-text-html-renderer";
 
 const props = Astro.props as { sobreMin: SobreMim };
 const { sobreMin } = props;
 
-const SobreMinText = marked.parse(sobreMin.Texto);
+const sobreMimImage = `${CheckImageUrl(sobreMin.foto.fields.file.url)}`;
+const SobremimText = documentToHtmlString(sobreMin.texto);
 ---
 
 <section
@@ -19,7 +21,7 @@ const SobreMinText = marked.parse(sobreMin.Texto);
     <!-- Imagem -->
     <div class="w-full md:w-1/2 flex justify-center">
       <img
-        src={`${CheckImageUrl(sobreMin.Foto.url)}`}
+        src={sobreMimImage}
         alt="Foto sobre mim"
         class="w-64 h-80 rounded-full object-cover shadow-lg/50 border-1 border-preto"
       />
@@ -29,12 +31,8 @@ const SobreMinText = marked.parse(sobreMin.Texto);
     <div class="w-full md:w-1/2 px-4">
       <div
         class="markdown leading-relaxed text-justify font-secondary text-white"
-        set:html={SobreMinText}
+        set:html={SobremimText}
       />
     </div>
   </div>
 </section>
-
-<script define:vars={{ SobreMinText }}>
-  console.log("SobreMim component loaded", SobreMinText);
-</script>
