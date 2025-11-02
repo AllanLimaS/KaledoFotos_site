@@ -1,0 +1,38 @@
+---
+import { CheckImageUrl } from "../lib/utils";
+
+import type { SobreMim } from "../interfaces/contentful";
+import { documentToHtmlString } from "@contentful/rich-text-html-renderer";
+
+const props = Astro.props as { sobreMin: SobreMim };
+const { sobreMin } = props;
+
+const sobreMimImage = `${CheckImageUrl(sobreMin.foto.fields.file.url)}`;
+const SobremimText = documentToHtmlString(sobreMin.texto);
+---
+
+<section
+  id="SobreMin"
+  class="bg-verde min-h-screen flex items-center justify-center"
+>
+  <div
+    class="max-w-5xl mx-auto px-6 py-12 flex flex-col md:flex-row items-center gap-8 snap-center"
+  >
+    <!-- Imagem -->
+    <div class="w-full md:w-1/2 flex justify-center">
+      <img
+        src={sobreMimImage}
+        alt="Foto sobre mim"
+        class="w-64 h-80 rounded-full object-cover shadow-lg/50 border-1 border-preto"
+      />
+    </div>
+
+    <!-- Texto -->
+    <div class="w-full md:w-1/2 px-4">
+      <div
+        class="markdown leading-relaxed text-justify font-secondary text-white"
+        set:html={SobremimText}
+      />
+    </div>
+  </div>
+</section>

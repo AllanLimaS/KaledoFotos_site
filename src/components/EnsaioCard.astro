@@ -1,0 +1,28 @@
+---
+import { Image } from "astro:assets";
+const { titulo, foto_url, foto_name, link } = Astro.props;
+
+---
+
+<!-- Card -->
+<a href={link} class="block group w-[300px]">
+  <div class="relative aspect-square overflow-hidden shadow-lg/50 group">
+    <Image
+      src={foto_url}
+      alt={foto_name}
+      width={400}
+      height={400}
+      decoding={"async"}
+      loading={"lazy"}
+      class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 fade-in-img"
+    />
+  </div>
+  <h3
+    class="text-lg font-secondary text-black mt-4 text-center text-shadow-lg/10"
+    transition:name={`titulo_${String(titulo ?? "")
+      .replace(/[^a-z0-9]/gi, "_")
+      .toLowerCase()}`}
+  >
+    {titulo}
+  </h3>
+</a>

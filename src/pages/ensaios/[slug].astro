@@ -1,0 +1,265 @@
+---
+// Imports
+import { contentfulClient } from "../../lib/contentful";
+import { documentToHtmlString } from "@contentful/rich-text-html-renderer";
+import type { Ensaio } from "../../interfaces/contentful";
+import { CheckImageUrl, slugify } from "../../lib/utils";
+
+import { Image, Picture } from "astro:assets";
+import Loader from "../../components/Loader.astro";
+
+import Layout from "../../layouts/Layout.astro";
+
+// Gerador de rotas estáticas
+export async function getStaticPaths() {
+  const ensaiosGet = await contentfulClient.getEntries({
+    content_type: "ensaio",
+  });
+
+  const ensaios = ensaiosGet.items.map((item) => {
+    const { titulo, descricao, fotoDeCapa, fotos } = item.fields;
+    return {
+      titulo,
+      descricao,
+      fotoDeCapa,
+      fotos,
+    };
+  });
+
+  const pages = ensaios.map((ensaio) => ({
+    params: { slug: slugify(ensaio.titulo) },
+    props: { ensaio },
+  }));
+  return pages;
+}
+
+// Props recebidas da rota estática
+const props = Astro.props as unknown as { ensaio: Ensaio };
+const { ensaio } = props;
+---
+
+<Layout title_sufixo=`${ensaio.titulo}`>
+  <Loader WaitForFonts={true} />
+
+  <h1
+    class="text-3xl font-primary text-preto mb-4 mt-25 text-center px-8"
+    transition:name={`titulo_${String(ensaio.titulo ?? "")
+      .replace(/[^a-z0-9]/gi, "_")
+      .toLowerCase()}`}
+    transition:persist
+  >
+    {ensaio.titulo}
+  </h1>
+  <div
+    class="text-lg font-secondary text-preto mb-4 text-center px-8 markdown"
+    set:html={documentToHtmlString(ensaio.descricao)}
+  />
+
+  <!-- GALERIA -->
+  <div
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 items-start justify-self-center gap-10 sm:gap-5 px-8 py-8"
+  >
+    {
+      [0, 1, 2].map((colIndex) => (
+        <div class="grid gap-10 sm:gap-5 max-w-[400px] justify-self-center">
+          {ensaio.fotos
+            .filter((_, index) => index % 3 === colIndex)
+            .map((foto, filteredIndex) => {
+              const originalIndex = ensaio.fotos.findIndex((f) => f === foto);
+              return (
+                <div
+                  class="shadow-xl/20 transition-transform duration-300 hover:scale-105 cursor-pointer gallery-item"
+                  data-index={originalIndex}
+                >
+                  <Picture
+                    src={`${CheckImageUrl(foto.fields.file.url)}`}
+                    width={1200}
+                    height={1200}
+                    decoding={"async"}
+                    alt={"Imagem do ensaio"}
+                    formats={["webp"]}
+                    class="h-auto w-full max-w-full object-cover fade-in-img opacity-0 transition-opacity duration-1000"
+                    loading="lazy"
+                    quality={100}
+                  />
+                </div>
+              );
+            })}
+        </div>
+      ))
+    }
+  </div>
+
+  <!-- LIGHTBOX -->
+  <div
+    id="lightbox"
+    class="fixed inset-0 bg-black/95 z-50 hidden items-center justify-center p-4"
+  >
+    <!-- Botão Fechar -->
+    <button
+      id="lightbox-close"
+      class="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-10"
+      aria-label="Fechar"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-8 w-8"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+
+    <!-- Botão Anterior -->
+    <button
+      id="lightbox-prev"
+      class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 transition-colors bg-black/10 hover:bg-black/30 p-3 rounded-full"
+      aria-label="Foto anterior"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-8 w-8"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M15 19l-7-7 7-7"></path>
+      </svg>
+    </button>
+
+    <!-- Botão Próximo -->
+    <button
+      id="lightbox-next"
+      class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 transition-colors bg-black/10 hover:bg-black/30 p-3 rounded-full"
+      aria-label="Próxima foto"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-8 w-8"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 5l7 7-7 7"></path>
+      </svg>
+    </button>
+
+    <!-- Imagem -->
+    <img
+      id="lightbox-img"
+      class="max-h-[90vh] max-w-[90vw] object-contain"
+      src=""
+      alt="Foto ampliada"
+    />
+
+    <!-- Contador de fotos -->
+    <div
+      class="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white text-sm"
+    >
+      <span id="lightbox-counter"></span>
+    </div>
+  </div>
+
+  <script
+    define:vars={{
+      fotos: ensaio.fotos.map((foto) => CheckImageUrl(foto.fields.file.url)),
+    }}
+  >
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImg = document.getElementById("lightbox-img");
+    const lightboxCounter = document.getElementById("lightbox-counter");
+    const lightboxClose = document.getElementById("lightbox-close");
+    const lightboxPrev = document.getElementById("lightbox-prev");
+    const lightboxNext = document.getElementById("lightbox-next");
+    const galleryItems = document.querySelectorAll(".gallery-item");
+
+    let currentIndex = 0;
+
+    function openLightbox(index) {
+      currentIndex = index;
+      updateLightbox();
+      lightbox.classList.remove("hidden");
+      lightbox.classList.add("flex");
+      document.body.style.overflow = "hidden"; // Previne scroll do body
+    }
+
+    function closeLightbox() {
+      lightbox.classList.add("hidden");
+      lightbox.classList.remove("flex");
+      document.body.style.overflow = ""; // Restaura scroll
+    }
+
+    function updateLightbox() {
+      lightboxImg.src = fotos[currentIndex];
+      lightboxCounter.textContent = `${currentIndex + 1} / ${fotos.length}`;
+    }
+
+    function showNext() {
+      currentIndex = (currentIndex + 1) % fotos.length;
+      updateLightbox();
+    }
+
+    function showPrev() {
+      currentIndex = (currentIndex - 1 + fotos.length) % fotos.length;
+      updateLightbox();
+    }
+
+    // Event listeners para abrir lightbox
+    galleryItems.forEach((item) => {
+      item.addEventListener("click", () => {
+        const index = parseInt(item.dataset.index);
+        openLightbox(index);
+      });
+    });
+
+    // Event listeners dos botões
+    lightboxClose?.addEventListener("click", closeLightbox);
+    lightboxPrev?.addEventListener("click", showPrev);
+    lightboxNext?.addEventListener("click", showNext);
+
+    // Fechar ao clicar no fundo
+    lightbox?.addEventListener("click", (e) => {
+      if (e.target === lightbox) {
+        closeLightbox();
+      }
+    });
+
+    // Navegação por teclado
+    document.addEventListener("keydown", (e) => {
+      if (!lightbox.classList.contains("hidden")) {
+        if (e.key === "Escape") closeLightbox();
+        if (e.key === "ArrowRight") showNext();
+        if (e.key === "ArrowLeft") showPrev();
+      }
+    });
+  </script>
+
+  <script is:inline>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll(".fade-in-img").forEach((img) => {
+        if (img.complete) {
+          // já carregada no cache
+          img.classList.remove("opacity-0");
+        } else {
+          img.addEventListener("load", () => {
+            img.classList.remove("opacity-0");
+          });
+        }
+      });
+    });
+  </script>
+</Layout>

@@ -1,0 +1,84 @@
+---
+import Layout from "../layouts/Layout.astro";
+import HomeSection from "../components/HomeSection.astro";
+import SobreMinSection from "../components/SobreMinSection.astro";
+import EnsaiosSection from "../components/EnsaiosSection.astro";
+import ContatoSection from "../components/ContatoSection.astro";
+
+import { contentfulClient } from "../lib/contentful";
+
+// Home -- Pagina Inicial
+
+const paginaInicialGet = await contentfulClient.getEntries({
+  content_type: "paginaInicial",
+  limit: 1,
+  include: 2, // resolve linked assets/references (images, etc.) so fields are available
+});
+
+const home_col = paginaInicialGet.items.map((item) => {
+  const { titulo, fotosDoCarrossel, fotoContato } = item.fields;
+  return {
+    titulo,
+    fotosDoCarrossel,
+    fotoContato,
+  };
+});
+const home = home_col[0];
+
+// Sobre mim
+
+const sobreMimGet = await contentfulClient.getEntries({
+  content_type: "sobreMim",
+  limit: 1,
+  include: 2, // resolve linked assets/references (images, etc.) so fields are available
+});
+
+const sobreMim_col = sobreMimGet.items.map((item) => {
+  const { foto, texto } = item.fields;
+  return {
+    foto,
+    texto,
+  };
+});
+const sobreMim = sobreMim_col[0];
+
+// Categorias de Ensaios
+const categoriaEnsaioGet = await contentfulClient.getEntries({
+  content_type: "categoriaDeEnsaio",
+  select: ["fields.titulo", "fields.fotoDeCapa"],
+});
+
+const categoriasEnsaios = categoriaEnsaioGet.items.map((item) => {
+  const { titulo, fotoDeCapa } = item.fields;
+  return {
+    titulo,
+    fotoDeCapa,
+  };
+});
+
+// Foto contato
+const fotoContato = home.fotoContato;
+
+// Redes Sociais
+const redesSociaisGet = await contentfulClient.getEntries({
+  content_type: "redeSocial",
+});
+
+const redesSociais = redesSociaisGet.items.map((item) => {
+  const { rede, link } = item.fields;
+  return {
+    rede,
+    link,
+  };
+});
+---
+
+<Layout>
+  <HomeSection home={home} />
+
+  <SobreMinSection sobreMin={sobreMim} />
+
+  <EnsaiosSection categoriasEnsaios={categoriasEnsaios} />
+
+  <ContatoSection fotoContato={fotoContato} redesSociais={redesSociais} />
+</Layout>
