@@ -36,6 +36,15 @@ export async function getStaticPaths() {
 // Props recebidas da rota estática
 const props = Astro.props as unknown as { ensaio: Ensaio };
 const { ensaio } = props;
+
+// Filtra apenas fotos válidas
+const fotosValidas = ensaio.fotos.filter(
+  (foto) => foto?.fields?.file?.url
+);
+
+if (fotosValidas.length === 0) {
+  console.warn(`Ensaio "${ensaio.titulo}" não tem fotos válidas`);
+}
 ---
 
 <Layout title_sufixo=`${ensaio.titulo}`>
@@ -62,10 +71,10 @@ const { ensaio } = props;
     {
       [0, 1, 2].map((colIndex) => (
         <div class="grid gap-10 sm:gap-5 max-w-[400px] justify-self-center">
-          {ensaio.fotos
+          {fotosValidas
             .filter((_, index) => index % 3 === colIndex)
             .map((foto, filteredIndex) => {
-              const originalIndex = ensaio.fotos.findIndex((f) => f === foto);
+              const originalIndex = fotosValidas.findIndex((f) => f === foto);
               return (
                 <div
                   class="shadow-xl/20 transition-transform duration-300 hover:scale-105 cursor-pointer gallery-item"
@@ -176,7 +185,7 @@ const { ensaio } = props;
 
   <script
     define:vars={{
-      fotos: ensaio.fotos.map((foto) => CheckImageUrl(foto.fields.file.url)),
+      fotos: fotosValidas.map((foto) => CheckImageUrl(foto.fields.file.url)),
     }}
   >
     const lightbox = document.getElementById("lightbox");
