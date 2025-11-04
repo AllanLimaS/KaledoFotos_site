@@ -4,7 +4,7 @@ export const contentfulClient = contentful.createClient({
   space: import.meta.env.CONTENTFUL_SPACE_ID,
 
   // Conteúdos em draft + publicados 
-  accessToken: import.meta.env.CONTENTFUL_PREVIEW_TOKEN
+  accessToken: import.meta.env.CONTENTFUL_PREVIEW_TOKEN,
   host: "preview.contentful.com"
   
   // Com esta configuração de baixo, o build de produção pegará apenas os conteúdos que estão publicados. 
