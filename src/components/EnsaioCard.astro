@@ -2,10 +2,12 @@
 import { Image } from "astro:assets";
 const { titulo, foto_url, foto_name, link } = Astro.props;
 
+// Adiciona barra no final se não tiver
+const normalizedLink = link.endsWith("/") ? link : link + "/";
 ---
 
 <!-- Card -->
-<a href={link} class="block group w-[300px]">
+<a href={normalizedLink} class="block group w-[300px]">
   <div class="relative aspect-square overflow-hidden shadow-lg/50 group">
     <Image
       src={foto_url}

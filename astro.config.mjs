@@ -20,6 +20,8 @@ export default defineConfig({
   redirects: {
     "/ensaios": "/#Ensaios",
   },
+
+  trailingSlash: 'always', // sempre deixa a barra final da URL 
   site: 'https://kaledofotos.com.br/',
   integrations: [sitemap()],
 });
