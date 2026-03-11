@@ -39,7 +39,7 @@ const links = [
           links.map((link) => (
             <a
               href={link.href}
-              class="text-preto py-5 px-5 rounded-full hover:bg-verde/50 transition duration-500 font-semibold font-secondary"
+              class="nav-link-desktop text-preto py-5 px-5 rounded-full hover:bg-verde/50 transition duration-500 font-semibold font-secondary"
             >
               {link.label}
             </a>
@@ -52,8 +52,8 @@ const links = [
   <!-- Links Mobile -->
   <div
     id="mobile-menu"
-    class="fixed inset-0 bg-white/50 z-40 flex flex-col items-center justify-center space-y-6 text-xl font-secondary text-preto
-         opacity-0 pointer-events-none -translate-y-50 transition-all duration-1000 ease-in-out backdrop-blur-lg"
+    class="fixed inset-0 bg-white/80 z-40 flex flex-col items-center justify-center space-y-6 text-xl font-secondary text-preto
+         opacity-0 pointer-events-none -translate-y-50 transition-all duration-1000 ease-in-out backdrop-blur-md"
   >
     <!-- Botão Fechar -->
     <button
@@ -124,5 +124,40 @@ const links = [
     closeBtnItems.forEach((item) =>
       item.addEventListener("click", () => toggleMenu(false))
     );
+
+    // Active state logic
+    const sections = document.querySelectorAll("section[id]");
+    const navLinks = document.querySelectorAll(".nav-link-desktop");
+    const mobileLinks = document.querySelectorAll(".menu-close-item");
+
+    const observerOptions = {
+        root: null,
+        rootMargin: "-30% 0px -60% 0px", 
+        threshold: 0
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting) {
+                const id = entry.target.getAttribute("id");
+                
+                navLinks.forEach(link => {
+                    link.classList.remove("bg-verde/50", "scale-105");
+                    if (link.getAttribute("href") === `/#${id}`) {
+                        link.classList.add("bg-verde/50", "scale-105"); 
+                    }
+                });
+                
+                mobileLinks.forEach(link => {
+                    link.classList.remove("bg-verde/70", "font-bold");
+                    if (link.getAttribute("href") === `/#${id}`) {
+                        link.classList.add("bg-verde/70", "font-bold");
+                    }
+                });
+            }
+        });
+    }, observerOptions);
+
+    sections.forEach(sec => observer.observe(sec));
   });
 </script>

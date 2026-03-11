@@ -204,12 +204,14 @@ if (fotosValidas.length === 0) {
       lightbox.classList.remove("hidden");
       lightbox.classList.add("flex");
       document.body.style.overflow = "hidden"; // Previne scroll do body
+      window.dispatchEvent(new Event('lightboxOpened'));
     }
 
     function closeLightbox() {
       lightbox.classList.add("hidden");
       lightbox.classList.remove("flex");
       document.body.style.overflow = ""; // Restaura scroll
+      window.dispatchEvent(new Event('lightboxClosed'));
     }
 
     function updateLightbox() {
