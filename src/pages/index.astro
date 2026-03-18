@@ -4,6 +4,7 @@ import HomeSection from "../components/HomeSection.astro";
 import SobreMinSection from "../components/SobreMinSection.astro";
 import EnsaiosSection from "../components/EnsaiosSection.astro";
 import ContatoSection from "../components/ContatoSection.astro";
+import { CheckImageUrl } from "../lib/utils";
 
 import { contentfulClient } from "../lib/contentful";
 
@@ -24,6 +25,14 @@ const home_col = paginaInicialGet.items.map((item) => {
   };
 });
 const home = home_col[0];
+
+// URL da primeira imagem do carrossel para preload no <head>
+const primeiraFotoCarrossel = (home.fotosDoCarrossel as any[])?.find(
+  (foto: any) => foto?.fields?.file?.url,
+);
+const heroPreloadUrl = primeiraFotoCarrossel
+  ? CheckImageUrl(primeiraFotoCarrossel.fields.file.url, 1920, "webp", 80)
+  : undefined;
 
 // Sobre mim
 
@@ -73,7 +82,7 @@ const redesSociais = redesSociaisGet.items.map((item) => {
 });
 ---
 
-<Layout>
+<Layout hero_preload_url={heroPreloadUrl}>
   <HomeSection home={home} />
 
   <SobreMinSection sobreMin={sobreMim} />

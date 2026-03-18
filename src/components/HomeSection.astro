@@ -1,6 +1,6 @@
 ---
 import { CheckImageUrl } from "../lib/utils";
-import Loader from "./Loader.astro";
+import { Picture } from "astro:assets";
 import type { PaginaInicial } from "../interfaces/contentful";
 
 const props = Astro.props as { home: PaginaInicial };
@@ -8,24 +8,30 @@ const { home } = props;
 
 const hero_images = home.fotosDoCarrossel
   .filter((foto) => foto?.fields?.file?.url)
-  .map((foto) => `${CheckImageUrl(foto.fields.file.url)}`);
+  .slice(0, 6) // Limita a 6 imagens para não sobrecarregar
+  .map((foto) => CheckImageUrl(foto.fields.file.url, 1920, "webp", 80));
 ---
 
 <section id="Home" class="relative h-screen overflow-hidden">
   <div class="carousel-container relative h-screen w-full">
     {
       hero_images.map((img, index) => (
-        <img
-          class={`carousel-image hero-carousel-img object-cover h-screen w-full absolute top-0 left-0 transition-opacity duration-1000 ${index === 0 ? "opacity-100" : "opacity-0"}`}
+        <Picture
           src={img}
-          alt=""
+          class={`carousel-image hero-carousel-img object-cover h-screen w-full absolute top-0 left-0 transition-opacity duration-1000 ${index === 0 ? "opacity-100" : "opacity-0"}`}
+          width={1920}
+          height={1080}
+          formats={["webp", "jpeg"]}
+          quality={80}
+          alt={index === 0 ? "Foto de capa" : ""}
+          fetchpriority={index === 0 ? "high" : "auto"}
+          loading={index === 0 ? "eager" : "lazy"}
+          decoding={index === 0 ? "sync" : "async"}
           data-index={index}
         />
       ))
     }
   </div>
-
-  <Loader IdImg="hero-carousel-img" />
 
   <div
     class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center z-10"
@@ -52,7 +58,7 @@ const hero_images = home.fotosDoCarrossel
     }
   </div>
 
-  <!-- Botões de navegação (opcional) -->
+  <!-- Botões de navegação -->
   <button
     class="carousel-prev absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/10 hover:bg-black/30 text-white p-3 rounded-full transition-colors z-10"
     aria-label="Imagem anterior"
@@ -103,7 +109,6 @@ const hero_images = home.fotosDoCarrossel
   const totalImages = images.length;
 
   function showImage(index: number) {
-    // Remove active state de todas as imagens e indicadores
     images.forEach((img) => img.classList.remove("opacity-100"));
     images.forEach((img) => img.classList.add("opacity-0"));
     indicators.forEach((ind) => {
@@ -111,7 +116,6 @@ const hero_images = home.fotosDoCarrossel
       ind.classList.add("bg-white/50");
     });
 
-    // Adiciona active state na imagem e indicador atual
     images[index].classList.remove("opacity-0");
     images[index].classList.add("opacity-100");
     indicators[index].classList.remove("bg-white/50");
@@ -131,14 +135,13 @@ const hero_images = home.fotosDoCarrossel
   }
 
   function startAutoplay() {
-    autoplayInterval = window.setInterval(nextImage, 5000); // Muda a cada 5 segundos
+    autoplayInterval = window.setInterval(nextImage, 5000);
   }
 
   function stopAutoplay() {
     clearInterval(autoplayInterval);
   }
 
-  // Event listeners para os botões
   document.querySelector(".carousel-next")?.addEventListener("click", () => {
     stopAutoplay();
     nextImage();
@@ -151,7 +154,6 @@ const hero_images = home.fotosDoCarrossel
     startAutoplay();
   });
 
-  // Event listeners para os indicadores
   indicators.forEach((indicator, index) => {
     indicator.addEventListener("click", () => {
       stopAutoplay();
@@ -160,12 +162,8 @@ const hero_images = home.fotosDoCarrossel
     });
   });
 
-  // Inicia o autoplay
   startAutoplay();
 
-  // Pausa o autoplay quando o mouse está sobre a seção
   document.querySelector("#Home")?.addEventListener("mouseenter", stopAutoplay);
-  document
-    .querySelector("#Home")
-    ?.addEventListener("mouseleave", startAutoplay);
+  document.querySelector("#Home")?.addEventListener("mouseleave", startAutoplay);
 </script>

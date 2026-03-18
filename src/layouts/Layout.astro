@@ -13,10 +13,8 @@ import { ClientRouter } from "astro:transitions";
 import { documentToHtmlString } from "@contentful/rich-text-html-renderer";
 import { documentToPlainTextString } from "@contentful/rich-text-plain-text-renderer";
 
-import "@fontsource/aboreto";
-import "@fontsource/poppins/400.css";
-import "@fontsource/poppins/600.css";
-import "@fontsource/poppins/700.css";
+// Fontes carregadas via Google Fonts de forma assíncrona (S7)
+// Remover imports @fontsource que eram bloqueantes
 
 const SeoGet = await contentfulClient.getEntries({
   content_type: "seo",
@@ -51,13 +49,18 @@ if (seo.metaDescription) {
 }
 
 const shareImg: any = seo.shareImage;
-const MetaShareImage = shareImg?.fields?.file?.url ? CheckImageUrl(String(shareImg.fields.file.url)) : '';
+const MetaShareImage = shareImg?.fields?.file?.url
+  ? CheckImageUrl(String(shareImg.fields.file.url))
+  : "";
 
 const pageURL = Astro.url.href;
 
 interface Props {
-  title_sufixo?: string; // isso faz com que o título seja opcional
+  title_sufixo?: string; // título da página (opcional)
+  hero_preload_url?: string; // URL da primeira imagem hero para preload
 }
+
+const { hero_preload_url } = Astro.props;
 ---
 
 <!doctype html>
@@ -68,7 +71,6 @@ interface Props {
 
     <!-- Favicon e Manifest -->
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="shortcut icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-title" content="Kaledo Fotos" />
@@ -92,41 +94,61 @@ interface Props {
     <meta name="twitter:description" content={MetaDescription} />
     <meta name="twitter:image" content={MetaShareImage} />
 
-
     <!-- Sitemap -->
     <link rel="sitemap" href="/sitemap-index.xml" />
 
-    <!-- Structured Data for Local SEO -->
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "PhotographyBusiness",
-      "name": "KaledoFotos",
-      "image": MetaShareImage || pageURL,
-      "url": pageURL,
-      "description": MetaDescription,
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Itajaí",
-        "addressRegion": "SC",
-        "addressCountry": "BR"
-      },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": "-26.9077",
-        "longitude": "-48.6619"
-      }
-    })} />
-    
-  </head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-TN9KNLSC29"></script>
-<script is:inline>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <!-- Preload da imagem hero para acelerar o LCP -->
+    {
+      hero_preload_url && (
+        <link
+          rel="preload"
+          as="image"
+          href={hero_preload_url}
+          fetchpriority="high"
+        />
+      )
+    }
 
-  gtag('config', 'G-TN9KNLSC29');
-</script>
+    <!-- Google Fonts carregado de forma assíncrona (não bloqueia o render) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Aboreto&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Aboreto&display=swap"
+      />
+    </noscript>
+
+    <!-- Structured Data for Local SEO -->
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "PhotographyBusiness",
+        name: "KaledoFotos",
+        image: MetaShareImage || pageURL,
+        url: pageURL,
+        description: MetaDescription,
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Itajaí",
+          addressRegion: "SC",
+          addressCountry: "BR",
+        },
+        geo: {
+          "@type": "GeoCoordinates",
+          latitude: "-26.9077",
+          longitude: "-48.6619",
+        },
+      })}
+    />
+  </head>
 
   <body>
     <Navbar />
@@ -135,6 +157,18 @@ interface Props {
     </main>
     <Footer />
     <BackToTop />
+
+    <!-- Google Analytics com defer — não bloqueia a thread principal -->
+    <script defer src="https://www.googletagmanager.com/gtag/js?id=G-TN9KNLSC29"
+    ></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-TN9KNLSC29");
+    </script>
   </body>
 </html>
 

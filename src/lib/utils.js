@@ -1,8 +1,19 @@
-export function CheckImageUrl(url) {
-    // Verifica se a URL já é completa (começa com "http" ou "https")
-    return url.startsWith("http") ? url : `https:${url}`;
-
-//    return url.startsWith("http") ? url : `${import.meta.env.STRAPI_URL}${url}`;
+/**
+ * Normaliza a URL de imagem do Contentful e adiciona parâmetros de otimização via CDN.
+ * @param {string} url - URL da imagem (pode começar com '//' ou 'https://')
+ * @param {number} width - Largura desejada (padrão: 1200)
+ * @param {string} format - Formato de saída: 'webp', 'jpg', 'png' (padrão: 'webp')
+ * @param {number} quality - Qualidade 1-100 (padrão: 80)
+ * @returns {string} URL otimizada
+ */
+export function CheckImageUrl(url, width = 1200, format = "webp", quality = 80) {
+    if (!url) return "";
+    // Normaliza protocolo
+    const base = url.startsWith("http") ? url : `https:${url}`;
+    // Evita adicionar parâmetros duplicados
+    if (base.includes("?")) return base;
+    // Adiciona parâmetros de otimização do Contentful Images API
+    return `${base}?w=${width}&fm=${format}&q=${quality}`;
 }
 
 export function slugify(text) {
