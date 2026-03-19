@@ -61,6 +61,16 @@ interface Props {
 }
 
 const { hero_preload_url } = Astro.props;
+
+let heroSrcset = "";
+let heroSrc = "";
+if (hero_preload_url) {
+  const src640 = CheckImageUrl(hero_preload_url, 640);
+  const src1024 = CheckImageUrl(hero_preload_url, 1024);
+  const src1920 = CheckImageUrl(hero_preload_url, 1920);
+  heroSrcset = `${src640} 640w, ${src1024} 1024w, ${src1920} 1920w`;
+  heroSrc = src1920;
+}
 ---
 
 <!doctype html>
@@ -103,7 +113,9 @@ const { hero_preload_url } = Astro.props;
         <link
           rel="preload"
           as="image"
-          href={hero_preload_url}
+          href={heroSrc}
+          imagesrcset={heroSrcset}
+          imagesizes="100vw"
           fetchpriority="high"
         />
       )

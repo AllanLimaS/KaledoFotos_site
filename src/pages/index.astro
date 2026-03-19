@@ -30,8 +30,8 @@ const home = home_col[0];
 const primeiraFotoCarrossel = (home.fotosDoCarrossel as any[])?.find(
   (foto: any) => foto?.fields?.file?.url,
 );
-const heroPreloadUrl = primeiraFotoCarrossel
-  ? CheckImageUrl(primeiraFotoCarrossel.fields.file.url, 1920, "webp", 80)
+const heroRawUrl = primeiraFotoCarrossel?.fields?.file?.url 
+  ? String(primeiraFotoCarrossel.fields.file.url) 
   : undefined;
 
 // Sobre mim
@@ -82,7 +82,7 @@ const redesSociais = redesSociaisGet.items.map((item) => {
 });
 ---
 
-<Layout hero_preload_url={heroPreloadUrl}>
+<Layout hero_preload_url={heroRawUrl}>
   <HomeSection home={home} />
 
   <SobreMinSection sobreMin={sobreMim} />
