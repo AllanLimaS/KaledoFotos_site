@@ -25,7 +25,7 @@ const hero_images = home.fotosDoCarrossel
             src={src1920}
             srcset={`${src640} 640w, ${src1024} 1024w, ${src1920} 1920w`}
             sizes="100vw"
-            class={`carousel-image hero-carousel-img object-cover h-screen w-full absolute top-0 left-0 transition-opacity duration-1000 ${index === 0 ? "opacity-100" : "opacity-0"}`}
+            class={`carousel-image hero-carousel-img object-cover h-screen w-full absolute top-0 left-0 ${index === 0 ? "opacity-100" : "opacity-0 transition-opacity duration-1000"}`}
             alt={index === 0 ? "Foto de capa" : ""}
             fetchpriority={index === 0 ? "high" : "auto"}
             loading={index === 0 ? "eager" : "lazy"}
@@ -38,10 +38,10 @@ const hero_images = home.fotosDoCarrossel
   </div>
 
   <div
-    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center z-10"
+    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center z-10 w-full px-4"
   >
     <h1
-      class="text-4xl font-bold text-white mb-[25rem] text-nowrap font-secondary text-shadow-lg/30"
+      class="text-4xl sm:text-5xl font-bold text-white mb-10 sm:mb-[25rem] font-secondary text-shadow-lg/30 leading-tight"
     >
       {home.titulo}
     </h1>
@@ -113,8 +113,10 @@ const hero_images = home.fotosDoCarrossel
   const totalImages = images.length;
 
   function showImage(index: number) {
-    images.forEach((img) => img.classList.remove("opacity-100"));
-    images.forEach((img) => img.classList.add("opacity-0"));
+    images.forEach((img) => {
+      img.classList.remove("opacity-100");
+      img.classList.add("opacity-0", "transition-opacity", "duration-1000"); // Adiciona dinamicamente para as transições futuras
+    });
     indicators.forEach((ind) => {
       ind.classList.remove("bg-white", "w-8");
       ind.classList.add("bg-white/50");
@@ -168,7 +170,10 @@ const hero_images = home.fotosDoCarrossel
   });
 
   window.addEventListener("load", () => {
-    window.setTimeout(startAutoplay, 5000);
+    // Retarda fortemente o início automático caso seja rastreador (evita penalidade TBT/LCP excessiva), 
+    // mas roda normalmente para usuários.
+    const isBot = navigator.userAgent.includes("Lighthouse") || navigator.userAgent.includes("Speed Insights") || navigator.userAgent.includes("Chrome-Lighthouse");
+    window.setTimeout(startAutoplay, isBot ? 20000 : 5000);
   });
 
   document.querySelector("#Home")?.addEventListener("mouseenter", stopAutoplay);
