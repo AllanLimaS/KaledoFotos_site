@@ -105,10 +105,10 @@ const hero_images = home.fotosDoCarrossel
   let currentIndex = 0;
   let autoplayInterval: number;
   const images = document.querySelectorAll(
-    ".carousel-image"
+    ".carousel-image",
   ) as NodeListOf<HTMLElement>;
   const indicators = document.querySelectorAll(
-    ".carousel-indicator"
+    ".carousel-indicator",
   ) as NodeListOf<HTMLElement>;
   const totalImages = images.length;
 
@@ -140,7 +140,7 @@ const hero_images = home.fotosDoCarrossel
 
   function startAutoplay() {
     // Intervalo de 8s (8000ms) garante que a página passa na métrica de Network/CPU Idle do Lighthouse (que necessita 5s inativos).
-    autoplayInterval = window.setInterval(nextImage, 8000); 
+    autoplayInterval = window.setInterval(nextImage, 8000);
   }
 
   function stopAutoplay() {
@@ -167,10 +167,12 @@ const hero_images = home.fotosDoCarrossel
     });
   });
 
-  // O startAutoplay() chama o intervalo. É importante iniciar somente uns instantes após a página carregar
-  // para permitir que os rastreadores Lighthouse classifiquem a página como renderizada (Idle CPU).
-  window.setTimeout(startAutoplay, 3000);
+  window.addEventListener("load", () => {
+    window.setTimeout(startAutoplay, 5000);
+  });
 
   document.querySelector("#Home")?.addEventListener("mouseenter", stopAutoplay);
-  document.querySelector("#Home")?.addEventListener("mouseleave", startAutoplay);
+  document
+    .querySelector("#Home")
+    ?.addEventListener("mouseleave", startAutoplay);
 </script>
