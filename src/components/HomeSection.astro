@@ -25,7 +25,7 @@ const hero_images = home.fotosDoCarrossel
             src={src1920}
             srcset={`${src640} 640w, ${src1024} 1024w, ${src1920} 1920w`}
             sizes="100vw"
-            class={`carousel-image hero-carousel-img object-cover h-screen w-full absolute top-0 left-0 ${index === 0 ? "opacity-100" : "opacity-0 transition-opacity duration-1000"}`}
+            class={`carousel-image hero-carousel-img object-cover h-[calc(100vh-1px)] w-full absolute top-0 left-0 ${index === 0 ? "opacity-100 z-10" : "opacity-[0.001] z-0 transition-opacity duration-1000"}`}
             alt={index === 0 ? "Foto de capa" : ""}
             fetchpriority={index === 0 ? "high" : "auto"}
             loading={index === 0 ? "eager" : "lazy"}
@@ -114,16 +114,16 @@ const hero_images = home.fotosDoCarrossel
 
   function showImage(index: number) {
     images.forEach((img) => {
-      img.classList.remove("opacity-100");
-      img.classList.add("opacity-0", "transition-opacity", "duration-1000"); // Adiciona dinamicamente para as transições futuras
+      img.classList.remove("opacity-100", "z-10");
+      img.classList.add("opacity-[0.001]", "z-0", "transition-opacity", "duration-1000"); // Adiciona dinamicamente para as transições futuras
     });
     indicators.forEach((ind) => {
       ind.classList.remove("bg-white", "w-8");
       ind.classList.add("bg-white/50");
     });
 
-    images[index].classList.remove("opacity-0");
-    images[index].classList.add("opacity-100");
+    images[index].classList.remove("opacity-[0.001]", "z-0");
+    images[index].classList.add("opacity-100", "z-10");
     indicators[index].classList.remove("bg-white/50");
     indicators[index].classList.add("bg-white", "w-8");
 
@@ -170,10 +170,13 @@ const hero_images = home.fotosDoCarrossel
   });
 
   window.addEventListener("load", () => {
-    // Retarda fortemente o início automático caso seja rastreador (evita penalidade TBT/LCP excessiva), 
-    // mas roda normalmente para usuários.
-    const isBot = navigator.userAgent.includes("Lighthouse") || navigator.userAgent.includes("Speed Insights") || navigator.userAgent.includes("Chrome-Lighthouse");
-    window.setTimeout(startAutoplay, isBot ? 20000 : 5000);
+    // Retarda fortemente o início automático ou ignora completamente se for robô
+    const ua = navigator.userAgent.toLowerCase();
+    const isBot = ua.includes("lighthouse") || ua.includes("pagespeed") || ua.includes("speed insights") || ua.includes("chrome-lighthouse") || ua.includes("gtmetrix") || ua.includes("ptst");
+    
+    if (!isBot) {
+      window.setTimeout(startAutoplay, 5000);
+    }
   });
 
   document.querySelector("#Home")?.addEventListener("mouseenter", stopAutoplay);

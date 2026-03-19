@@ -53,7 +53,7 @@ const links = [
   <div
     id="mobile-menu"
     class="fixed inset-0 bg-white/80 z-40 flex flex-col items-center justify-center space-y-6 text-xl font-secondary text-preto
-         opacity-0 pointer-events-none -translate-y-50 transition-all duration-1000 ease-in-out backdrop-blur-md"
+         opacity-[0.001] pointer-events-none -translate-y-full transition-all duration-1000 ease-in-out backdrop-blur-md"
   >
     <!-- Botão Fechar -->
     <button
@@ -96,14 +96,14 @@ const links = [
 
     if (show) {
       menu.classList.remove(
-        "opacity-0",
+        "opacity-[0.001]",
         "pointer-events-none",
-        "-translate-y-50"
+        "-translate-y-full"
       );
       menu.classList.add("opacity-100", "pointer-events-auto", "translate-y-0");
       document.body.classList.add("overflow-hidden");
     } else {
-      menu.classList.add("opacity-0", "pointer-events-none", "-translate-y-50");
+      menu.classList.add("opacity-[0.001]", "pointer-events-none", "-translate-y-full");
       menu.classList.remove(
         "opacity-100",
         "pointer-events-auto",
