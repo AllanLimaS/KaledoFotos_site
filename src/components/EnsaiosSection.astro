@@ -5,7 +5,6 @@ import type { CategoriaEnsaio } from "../interfaces/contentful";
 
 const props = Astro.props as { categoriasEnsaios: CategoriaEnsaio[] };
 const { categoriasEnsaios } = props;
-
 ---
 
 <section id="Ensaios" class="py-12 px-6 min-h-screen content-center">
@@ -20,7 +19,7 @@ const { categoriasEnsaios } = props;
           <EnsaioCard
             titulo={item.titulo}
             foto_url={`${CheckImageUrl(item.fotoDeCapa.fields.file.url)}`}
-            foto_name={item.fotoDeCapa.fields.file.url}
+            foto_name={`Fotografia de ${item.titulo} em Itajaí - SC`}
             link={`/categorias/${slugify(item.titulo)}`}
           />
         ))

@@ -12,7 +12,7 @@ const hero_images = home.fotosDoCarrossel
   .map((foto) => String(foto.fields.file.url)); // Pega apenas a URL bruta
 ---
 
-<section id="Home" class="relative h-screen overflow-hidden">
+<section id="Home" class="relative h-screen overflow-hidden bg-verde">
   <div class="carousel-container relative h-screen w-full">
     {
       hero_images.map((imgUrl, index) => {
@@ -26,7 +26,11 @@ const hero_images = home.fotosDoCarrossel
             srcset={`${src640} 640w, ${src1024} 1024w, ${src1920} 1920w`}
             sizes="100vw"
             class={`carousel-image hero-carousel-img object-cover h-[calc(100vh-1px)] w-full absolute top-0 left-0 ${index === 0 ? "opacity-100 z-10" : "opacity-[0.001] z-0 transition-opacity duration-1000"}`}
-            alt={index === 0 ? "Foto de capa" : ""}
+            alt={
+              index === 0
+                ? "Fotógrafa Amanda Araújo em Itajaí - Capa"
+                : `Ensaio Fotográfico em Itajaí - KaledoFotos Imagem ${index + 1}`
+            }
             fetchpriority={index === 0 ? "high" : "auto"}
             loading={index === 0 ? "eager" : "lazy"}
             decoding={index === 0 ? "sync" : "async"}
@@ -41,9 +45,15 @@ const hero_images = home.fotosDoCarrossel
     class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center z-10 w-full px-4"
   >
     <h1
-      class="text-4xl sm:text-5xl font-bold text-white mb-10 sm:mb-[25rem] font-secondary text-shadow-lg/30 leading-tight"
+      class={String(home.titulo || "").trim()
+        ? "text-4xl sm:text-5xl font-bold text-white mb-10 sm:mb-[25rem] font-secondary text-shadow-lg/30 leading-tight"
+        : "sr-only"}
     >
-      {home.titulo}
+      {
+        String(home.titulo || "").trim()
+          ? home.titulo
+          : "KaledoFotos - Fotografia Afetiva e Ensaios em Itajaí SC"
+      }
     </h1>
   </div>
 
@@ -115,7 +125,12 @@ const hero_images = home.fotosDoCarrossel
   function showImage(index: number) {
     images.forEach((img) => {
       img.classList.remove("opacity-100", "z-10");
-      img.classList.add("opacity-[0.001]", "z-0", "transition-opacity", "duration-1000"); // Adiciona dinamicamente para as transições futuras
+      img.classList.add(
+        "opacity-[0.001]",
+        "z-0",
+        "transition-opacity",
+        "duration-1000",
+      ); // Adiciona dinamicamente para as transições futuras
     });
     indicators.forEach((ind) => {
       ind.classList.remove("bg-white", "w-8");
@@ -172,8 +187,14 @@ const hero_images = home.fotosDoCarrossel
   window.addEventListener("load", () => {
     // Retarda fortemente o início automático ou ignora completamente se for robô
     const ua = navigator.userAgent.toLowerCase();
-    const isBot = ua.includes("lighthouse") || ua.includes("pagespeed") || ua.includes("speed insights") || ua.includes("chrome-lighthouse") || ua.includes("gtmetrix") || ua.includes("ptst");
-    
+    const isBot =
+      ua.includes("lighthouse") ||
+      ua.includes("pagespeed") ||
+      ua.includes("speed insights") ||
+      ua.includes("chrome-lighthouse") ||
+      ua.includes("gtmetrix") ||
+      ua.includes("ptst");
+
     if (!isBot) {
       window.setTimeout(startAutoplay, 5000);
     }
