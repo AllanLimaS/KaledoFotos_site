@@ -4,6 +4,7 @@ import "../styles/global.css";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
 import BackToTop from "../components/BackToTop.astro";
+import CookieBanner from "../components/CookieBanner.astro";
 import { CheckImageUrl } from "../lib/utils";
 
 import { contentfulClient } from "../lib/contentful";
@@ -160,6 +161,30 @@ if (hero_preload_url) {
         },
       })}
     />
+
+    <!-- Google Consent Mode -->
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      
+      // Define tudo como RECUSADO por padrão (essencial para o GA entender o Modo de Consentimento)
+      gtag("consent", "default", {
+        ad_storage: "denied",
+        analytics_storage: "denied",
+        ad_user_data: "denied",
+        ad_personalization: "denied"
+      });
+
+      // Se já tinha aceitado antes, manda um aviso de ATUALIZAÇÃO
+      if(localStorage.getItem('cookies_accepted') === 'true'){
+        gtag("consent", "update", {
+          ad_storage: "granted",
+          analytics_storage: "granted",
+          ad_user_data: "granted",
+          ad_personalization: "granted"
+        });
+      }
+    </script>
   </head>
 
   <body>
@@ -168,16 +193,11 @@ if (hero_preload_url) {
       <slot />
     </main>
     <Footer />
+    <CookieBanner />
     <BackToTop />
 
-    <!-- Google Analytics com defer — não bloqueia a thread principal -->
-    <script defer src="https://www.googletagmanager.com/gtag/js?id=G-TN9KNLSC29"
-    ></script>
+    <script defer src="https://www.googletagmanager.com/gtag/js?id=G-TN9KNLSC29"></script>
     <script is:inline>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
       gtag("js", new Date());
       gtag("config", "G-TN9KNLSC29");
     </script>

@@ -1,0 +1,85 @@
+---
+// src/components/CookieBanner.astro
+---
+<div id="cookie-banner" class="fixed bottom-0 left-0 w-full bg-preto/95 backdrop-blur-md text-white px-6 py-4 flex flex-col md:flex-row justify-between items-center z-[100] translate-y-full transition-transform duration-500 ease-in-out font-secondary text-sm md:text-base border-t border-verde/30 hidden">
+  <div class="mb-4 md:mb-0 max-w-4xl">
+    <p>
+      Utilizamos cookies e tecnologias similares para melhorar a sua experiência em nosso site, entender o desempenho das nossas campanhas e personalizar conteúdo. 
+      Ao continuar navegando, você concorda com a nossa <a href="/politica-de-privacidade" class="underline hover:text-bordo transition-colors">Política de Privacidade</a>.
+    </p>
+  </div>
+  <div class="flex flex-col sm:flex-row gap-3">
+    <button id="decline-cookies" class="bg-transparent border border-white text-white px-6 py-2 rounded-full font-bold hover:bg-white/10 transition">
+      Recusar
+    </button>
+    <button id="accept-cookies" class="bg-verde text-white px-6 py-2 rounded-full font-bold hover:scale-105 hover:bg-bege-escuro transition shadow-lg">
+      Aceitar
+    </button>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const banner = document.getElementById("cookie-banner");
+    const acceptBtn = document.getElementById("accept-cookies");
+    const declineBtn = document.getElementById("decline-cookies");
+
+    // Verifica se já aceitou
+    if (!localStorage.getItem("cookies_accepted")) {
+      // Remove o hidden e aciona a transição para subir suavemente
+      if(banner) {
+        banner.classList.remove("hidden");
+        // Pequeno delay para a transição do Tailwind funcionar
+        setTimeout(() => {
+          banner.classList.remove("translate-y-full");
+        }, 100);
+      }
+    }
+
+    if(acceptBtn && banner) {
+      acceptBtn.addEventListener("click", () => {
+        // Salva no localStorage
+        localStorage.setItem("cookies_accepted", "true");
+        
+        // Desce o banner
+        banner.classList.add("translate-y-full");
+        setTimeout(() => {
+          banner.classList.add("hidden");
+        }, 500);
+        
+        // Aqui você pode disparar algum evento pro GA4 se desejar consentimento ativo
+        if (typeof (window as any).gtag === 'function') {
+          (window as any).gtag('consent', 'update', {
+            'analytics_storage': 'granted',
+            'ad_storage': 'granted',
+            'ad_user_data': 'granted',
+            'ad_personalization': 'granted'
+          });
+        }
+      });
+    }
+
+    if (declineBtn && banner) {
+      declineBtn.addEventListener("click", () => {
+        // Salva no localStorage como false
+        localStorage.setItem("cookies_accepted", "false");
+        
+        // Desce o banner
+        banner.classList.add("translate-y-full");
+        setTimeout(() => {
+          banner.classList.add("hidden");
+        }, 500);
+        
+        // Dispara update pro GA4 confirmando recusa total
+        if (typeof (window as any).gtag === 'function') {
+          (window as any).gtag('consent', 'update', {
+            'analytics_storage': 'denied',
+            'ad_storage': 'denied',
+            'ad_user_data': 'denied',
+            'ad_personalization': 'denied'
+          });
+        }
+      });
+    }
+  });
+</script>
